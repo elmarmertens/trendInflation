@@ -166,6 +166,22 @@ for i = 1 : Ny
     wrapcf(sprintf('tau12m%s', Ylabel{i}), wrap)
 end
 
+%% recent 12m data
+close all
+
+for i = 1 : Ny 
+    newfigure 
+    plotCIlines(TAU(:,ndxmean,i), TAU(:,ndxtails,i), dates)
+    hold on
+    y12m = sumK(y(:,i), 12) / 12;
+    plotynoncompact(dates, y12m, [1 0 0]);
+    xtickdates(dates(dates >= datenum(1999,1,1)))
+    ylim([min([ylim, 0]) max([ylim, 4])])
+    grid on
+    title(sprintf('%s Trend level for %s: %6.2f%% (90%% band: %4.2f%% - %4.2f%%)', Ylabel{i}, datestr(dates(end), 'mmm yyyy'), TAU(end,ndxmean,i), TAU(end,ndxtails,i)))
+    wrapcf(sprintf('RECENTtau12m%s', Ylabel{i}), wrap)
+end
+
 % for i = 1 : Ny
 %     newfigure 
 %     plotCIlines(TAU(:,ndxmean,i), TAU(:,ndxtails,i), dates)
@@ -212,7 +228,8 @@ end
 coreNdx = 2;
 hrulefill
 tableNdx = find(ismember(dates, [datenum(2007,12,1);datenum(2015,12,1);datenum(2016,12,1)';datenum(2017,3:3:12,1)';datenum(2018,3:3:12,1)']));
-tableNdx = cat(1, tableNdx, T);
+tableNdx = cat(1, tableNdx, (T-3:T)');
+tableNdx = unique(tableNdx);
 for i = 1 : length(tableNdx)
     
     t = tableNdx(i);
