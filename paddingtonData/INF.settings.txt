@@ -1,10 +1,7 @@
-Ny = 7
+Ny = 4
 T  = 705
 YLABEL:
 PCE
 PCEcore
 CPI
 GDPD
-PCEtrim
-CPItrim
-CPImedian

@@ -1,5 +1,5 @@
 Data List: INFTRM
-Data Updated: 2017-06-30
+Data Updated: 2018-10-11
 
 FRED (Federal Reserve Economic Data)
 Link: https://fred.stlouisfed.org
@@ -102,7 +102,7 @@ Gross Domestic Product
 
 Units
 ----------------------------------------------------------------------
-Index 2009=100                                                        
+Index 2012=100                                                        
 
 Frequency
 ----------------------------------------------------------------------
@@ -114,7 +114,7 @@ Seasonally Adjusted
 
 Notes
 ----------------------------------------------------------------------
-BEA Account Code: A191RD3                                             
+BEA Account Code: A191RD                                              
                                                                       
 The number of decimal places reported varies over time. A Guide to the
 National Income and Product Accounts of the United States (NIPA) -    
@@ -191,7 +191,7 @@ Personal Income and Outlays
 
 Units
 ----------------------------------------------------------------------
-Index 2009=100                                                        
+Index 2012=100                                                        
 
 Frequency
 ----------------------------------------------------------------------
@@ -203,8 +203,7 @@ Seasonally Adjusted
 
 Notes
 ----------------------------------------------------------------------
-BEA Account Code: DPCERG3                                             
-                                                                      
+BEA Account Code: DPCERG                                              
 A Guide to the National Income and Product Accounts of the United     
 States (NIPA) - (http://www.bea.gov/national/pdf/nipaguid.pdf)        
 
@@ -229,7 +228,7 @@ Personal Income and Outlays
 
 Units
 ----------------------------------------------------------------------
-Index 2009=100                                                        
+Index 2012=100                                                        
 
 Frequency
 ----------------------------------------------------------------------
@@ -241,8 +240,7 @@ Seasonally Adjusted
 
 Notes
 ----------------------------------------------------------------------
-BEA Account Code: DPCCRG3                                             
-                                                                      
+BEA Account Code: DPCCRG                                              
 A Guide to the National Income and Product Accounts of the United     
 States (NIPA) - (http://www.bea.gov/national/pdf/nipaguid.pdf)        
 

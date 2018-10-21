@@ -10,7 +10,8 @@
 !/toolbox2/*.f90
 !/paddingtonFRB/
 !/paddingtonData/
-!/paddingtonData/*zip
+!/paddingtonData/*.zip
+!/paddingtonData/*.csv
 .*
 ~*
 *~

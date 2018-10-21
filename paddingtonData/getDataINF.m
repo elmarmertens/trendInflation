@@ -12,10 +12,10 @@ dates    = dates(dates <= samEnd);
 T        = length(dates);
 
 
-Ylabel = {'PCE', 'PCEcore', 'CPI', 'GDPD', 'PCEtrim', 'CPItrim', 'CPImedian'};
+Ylabel = {'PCE', 'PCEcore', 'CPI', 'GDPD'};
 Ny = length(Ylabel);
 
-dataLabel = 'INFTRM';
+dataLabel = 'INF';
 
 %% load FRED data
 
@@ -45,8 +45,8 @@ md.data(:,ppNdx)        = log(1 + md.data(:,ppNdx) / 100) * 100;
 data = NaN(T,Ny);
 
 m2dates = ismember(md.dates, dates);
-mndx    = [3 7 1 2 5 6]; 
-data(ismember(dates, md.dates), mndx) = md.data(m2dates,:);
+mndx    = [3 4 1]; 
+data(ismember(dates, md.dates), 1:3) = md.data(m2dates,mndx);
 
 q2dates = ismember(qd.dates, dates);
 qndx    = 4; 
