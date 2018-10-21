@@ -1,0 +1,10 @@
+Ny = 7
+T  = 689
+YLABEL:
+PCE
+PCEcore
+CPI
+GDPD
+PCEtrim
+CPItrim
+CPImedian

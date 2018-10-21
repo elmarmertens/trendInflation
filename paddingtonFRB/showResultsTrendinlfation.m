@@ -1,0 +1,200 @@
+%% plot ucsv fortran results
+close all
+clc
+wrap = [];
+
+addpath toolbox2
+
+datalabel = 'INFTRM';
+T = 679; % needs to be adapted to the length of the actual input data
+
+samplestamp = sprintf('T%d', T);
+ 
+fortrandir = pwd;
+timestamp  = 'notrendslopes';
+
+
+
+%% get data
+
+y  = importdata(fullfile(fortrandir, sprintf('%s.yData.txt', datalabel)));
+Ny = size(y,2);
+Nstates = Ny * 2;
+Nsv = Ny;
+
+
+foo = importdata(fullfile(fortrandir, sprintf('%s.settings.txt', datalabel)));
+Ylabel = foo(4:end,1);
+
+filename = fullfile(fortrandir, sprintf('%s.yNaN.txt', datalabel));
+if exist(filename, 'file')
+    yNaN = logical(importdata(filename));
+    y(yNaN) = NaN;
+end
+
+ybar = nanmean(y,2);
+
+filename = sprintf('%s.label.txt', datalabel);
+
+
+dates = importdata(fullfile(fortrandir, sprintf('%s.dates.txt', datalabel)));
+
+if ~isempty(T)
+    dates = dates(1:T);
+    y     = y(1:T,:);
+    ybar  = ybar(1:T);
+    yNaN  = yNaN(1:T,:);
+else
+    T = length(y);
+end
+
+%% get parameters
+
+if isempty(samplestamp)
+    fileext = sprintf('%s.gapSV.dat', datalabel);
+else
+    fileext = sprintf('%s.%s.gapSV.dat', datalabel, samplestamp);
+end
+if ~isempty(timestamp)
+    fileext = sprintf('%s.%s', timestamp,fileext);
+end
+
+
+type(fullfile(fortrandir, strcat('settings.', fileext)));
+
+
+tau         = importdata(fullfile(fortrandir, sprintf('TAU1.%s', fileext)));
+
+sigtrend    = importdata(fullfile(fortrandir, sprintf('SIGTREND.%s', fileext)));
+siggap      = NaN(size(sigtrend,1), size(sigtrend,2), Ny);
+for n = 1 : Ny
+    siggap(:,:,n)  = importdata(fullfile(fortrandir, sprintf('SIGGAP%d.%s', n, fileext)));
+end
+% maxlambda   = importdata(fullfile(fortrandir, sprintf('MAXLAMBDA.%s', fileext)));
+% hvarbar     = loaddat(fullfile(fortrandir, sprintf('HVARBAR.%s', fileext)));
+% F           = loaddat(fullfile(fortrandir, sprintf('F.%s', fileext)));
+
+
+Ndraws      = length(tau);
+
+TAU = NaN(T, 12, Ny);
+for i = 1 : Ny
+    TAU(:,:,i)    = importdata(fullfile(fortrandir, sprintf('TAU%d.%s', i, fileext)));
+end
+
+STATES = NaN(T, 12, Nstates);
+for i = 1 : Nstates
+    STATES(:,:,i)    = importdata(fullfile(fortrandir, sprintf('STATES%d.%s', i, fileext)));
+end
+
+% % slopes
+% shockslopes = loaddat(fullfile(fortrandir, sprintf('SHOCKSLOPES.%s', fileext)));
+% trendslopes = loaddat(fullfile(fortrandir, sprintf('TRENDSLOPES.%s', fileext)));
+% 
+% % hinno
+% hSigmavech = loaddat(fullfile(fortrandir, sprintf('HSIGMA.DRAWS.%s', fileext)));
+% 
+% % hgap0
+% hgap0 = loaddat(fullfile(fortrandir, sprintf('HGAP0.%s', fileext)));
+
+datalabel   = strrep(datalabel, '_', '');
+trendname   = strcat('Trend',datalabel);
+SV1name     = strcat('SVTREND',datalabel);
+SV2name     = strcat('SVGAP',datalabel);
+
+
+ndxmean     = 1;
+ndxmedian   = 2;
+ndxtails    = 2 + [4 7];
+
+
+
+%% plot
+newfigure
+plotCIlines(tau(:,ndxmean), tau(:,ndxtails), dates, [], [], true)
+hold on
+xtickdates(dates)
+grid on
+wrapcf(trendname, wrap)
+
+
+ndx = dates >= datenum(2000,1,1);
+newfigure
+plotCIlines(tau(ndx,ndxmean), tau(ndx,ndxtails), dates(ndx), [], [], true)
+hold on
+ylim([0 4])
+xtickdates(dates(ndx))
+grid on
+wrapcf(strcat('RECENT', trendname), wrap)
+
+%% Trend, data and shades
+for i = 1 : Ny 
+    newfigure 
+    plotCIlines(TAU(:,ndxmean,i), TAU(:,ndxtails,i), dates)
+    hold on
+    plotynoncompact(dates, y(:,i), [1 0 0]);
+    xtickdates(dates)
+    grid on
+    wrapcf(sprintf('tau%s', Ylabel{i}), wrap)
+end
+
+for i = 1 : Ny
+    newfigure 
+    plotCIlines(TAU(:,ndxmean,i), TAU(:,ndxtails,i), dates)
+    hold on
+    
+    plotynoncompact(dates, y(:,i), [1 0 0]);
+    xtickdates(dates(dates >= datenum(1999,1,1)))
+    
+    grid on
+    wrapcf(sprintf('RECENTtau%s', Ylabel{i}), wrap)
+end
+
+%% Trend SV
+newfigure
+plotCIlines(sigtrend(:,ndxmean), sigtrend(:,ndxtails), dates)
+hold on
+xtickdates(dates)
+datetick('x', 'keeplimits')
+wrapcf(SV1name, wrap)
+
+%% SVgap and data
+
+for i = 1 : Ny
+    
+    firstObs = find(~yNaN(:,i),1,'first');
+    newfigure
+    subplot(2,1,1)
+    plotCIlines(STATES(:,ndxmean,Ny + i), STATES(:,ndxtails,Ny + i), dates)
+    hold on
+    shades(dates, 1 : T < firstObs)
+    xtickdates(dates)
+    grid on
+    
+    subplot(2,1,2)
+    plotCIlines(siggap(:,ndxmean,i), siggap(:,ndxtails,i), dates)
+    hold on
+    xtickdates(dates)
+    shades(dates, 1 : T < firstObs)
+    datetick('x', 'keeplimits')
+    wrapcf(sprintf('GAP%s', Ylabel{i}), wrap)
+end
+
+%% report little table
+coreNdx = 2;
+hrulefill
+tableNdx = find(ismember(dates, [datenum(2007,12,1);datenum(2015,12,1);datenum(2016,3:3:8,1)']));
+tableNdx = cat(1, tableNdx, T);
+for i = 1 : length(tableNdx)
+    
+    t = tableNdx(i);
+
+    
+    fprintf('%s ', datestr(dates(t), 'YYYY-mmm'))
+    fprintf('\t %6.4f', TAU(t,ndxmean,coreNdx))
+    fprintf('\t (%6.4f -- %6.4f)', TAU(t,ndxtails,coreNdx))
+    
+    fprintf('\n')
+end
+
+%% finish
