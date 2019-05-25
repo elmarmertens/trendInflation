@@ -6,8 +6,8 @@ wrap = pwd;
 addpath toolbox2
 
 datalabel = 'INFTRM';
-% datalabel = 'INF';
-T = 705; % needs to be adapted to the length of the actual input data
+datalabel = 'INF';
+T = 712; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  
@@ -26,6 +26,9 @@ Nsv = Ny;
 
 foo = importdata(fullfile(fortrandir, sprintf('%s.settings.txt', datalabel)));
 Ylabel = foo(4:end,1);
+
+% Ylabel = cellfun(@(x) sprintf('%s-%s', datalabel, x), Ylabel, 'UniformOutput', false) 
+Ylabel = strcat(datalabel, '-', Ylabel);
 
 filename = fullfile(fortrandir, sprintf('%s.yNaN.txt', datalabel));
 if exist(filename, 'file')
@@ -225,7 +228,7 @@ for i = 1 : Ny
 end
 
 %% report little table
-coreNdx = 2;
+coreNdx = 1;
 hrulefill
 tableNdx = find(ismember(dates, [datenum(2007,12,1);datenum(2015,12,1);datenum(2016,12,1)';datenum(2017,3:3:12,1)';datenum(2018,3:3:12,1)']));
 tableNdx = cat(1, tableNdx, (T-3:T)');
@@ -241,6 +244,10 @@ for i = 1 : length(tableNdx)
     
     fprintf('\n')
 end
+
+%% store data table
+writedatatable(".", sprintf('Trend-%s', Ylabel{coreNdx}), ...
+    dates, TAU(:, [ndxmean ndxtails]), {'posterior mean', 'posterior 5\% quantile', 'posterior 95\% quantile'}, 'yyyymmm');
 
 %% finish
 dockAllFigures

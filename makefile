@@ -1,4 +1,5 @@
 THIS ?= mcmcPaddingtonGAPSV
+datalabel ?= INFTRM
 # THIS ?= particlefilterPaddingtonGAPSV
 # note: toolbox2 needs updating before particlefilter can be used
 
@@ -75,7 +76,7 @@ compile	: $(THIS)
 
 run	: $(THIS)
 	rm -f *.debug
-	time -p ./$(THIS) 
+	time -p ./$(THIS) $(datalabel)
 
 
 edit :
