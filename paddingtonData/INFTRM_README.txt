@@ -1,5 +1,5 @@
 Data List: INFTRM
-Data Updated: 2018-10-11
+Data Updated: 2019-05-10
 
 FRED (Federal Reserve Economic Data)
 Link: https://fred.stlouisfed.org
@@ -77,10 +77,10 @@ prices and not the complete average.(1)
                                                                       
 For more information on the consumer price indexes, see:              
 (1) Bureau of Economic Analysis. “CPI Detailed Report.” 2013;     
-http://www.bls.gov/cpi/.                                              
-Handbook of Methods - (http://www.bls.gov/opub/hom/pdf/homch17.pdf)   
+https://www.bls.gov/cpi/.                                             
+Handbook of Methods - (https://www.bls.gov/opub/hom/pdf/cpihom.pdf)   
 Understanding the CPI: Frequently Asked Questions -                   
-(http://stats.bls.gov:80/cpi/cpifaq.htm)                              
+(https://www.bls.gov/cpi/questions-and-answers.htm)                   
 
 
 
@@ -154,8 +154,8 @@ Notes
 ----------------------------------------------------------------------
 Median Consumer Price Index (CPI) is a measure of core inflation      
 calculated the Federal Reserve Bank of Cleveland and the Ohio State   
-University. Median CPI was created as a different way to get a “Core
-CPI” measure, or a better measure of underlying inflation trends. To
+University. Median CPI was created as a different way to get a 'Core  
+CPI' measure, or a better measure of underlying inflation trends. To  
 calculate the Median CPI, the Cleveland Fed analyzes the median price 
 change of the goods and services published by the BLS. The median     
 price change is the price change that’s right in the middle of the  
@@ -169,7 +169,7 @@ or the CPI excluding food and energy. According to newer research done
 at the Cleveland Fed, the Median CPI is even better at PCE inflation  
 in the near and longer term than the core PCE.                        
 For further information, go to                                        
-http://www.clevelandfed.org/research/data/us-inflation/mcpi.cfm       
+https://www.clevelandfed.org/en/our-research/indicators-and-data/media
 
 
 
@@ -331,9 +331,8 @@ extreme monthly price changes. This series excludes 8% of the CPI
 components with the highest and lowest one-month price changes from   
 each tail of the price-change distribution resulting in a 16%         
 Trimmed-Mean Inflation Estimate.                                      
-                                                                      
 For further information, go to                                        
-http://www.clevelandfed.org/research/data/us-inflation/mcpi.cfm.      
+https://www.clevelandfed.org/en/our-research/indicators-and-data/media
 
 
 

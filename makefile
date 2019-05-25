@@ -92,4 +92,5 @@ clean	:
 
 cleanall :
 	rm -f *.dat
+	rm -f *.jpg
 	$(MAKE) clean	

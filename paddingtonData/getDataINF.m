@@ -5,7 +5,7 @@ clear
 clc
 
 samStart = datenum(1960,1,1);
-samEnd   = datenum(2018,09,1);
+samEnd   = datenum(2019,04,1);
 
 dates    = genrMdates(1960,year(samEnd),1);
 dates    = dates(dates <= samEnd);
