@@ -5,29 +5,28 @@ datalabel ?= INFTRM
 
 toolboxes=statespacebox.o vslbox.o embox.o gibbsbox.o timerbox.o blaspackbox.o cmcbox.o densitybox.o
 
+UNAME := $(shell uname)
 
+ifeq ($(UNAME), Darwin)
+  # mac
+  FCdebugseq=ifort -mkl -warn all -warn noexternals -WB -check all -check noarg_temp_created -static-intel -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCdebug=ifort -mkl -warn all -WB -warn noexternals -check all -check noarg_temp_created -static-intel -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCprod=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCprofile=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -qopt-report-file=foo.out -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+else
+  # linux
+  FCdebugseq=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel 
+  FCdebug=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel -qopenmp 
+  FCprod=ifort -O3 -mkl -nocheck -qopenmp  -shared-intel  -xHost 
+  FCprofile=ifort -O3 -mkl -nocheck -qopenmp  -shared-intel -xHost -qopt-report-file=foo.out
+endif
 
-# mac: debug
-FCdebugseq=ifort -mkl -warn all -WB -check all -check noarg_temp_created -static-intel -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-FCdebug=ifort -mkl -warn all -WB -check all -check noarg_temp_created -static-intel -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-
-#  -warn alignments,declarations,general,unused,usage,interfaces
-
-# mac: production
-# FC=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -heap-arrays 65532 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-FCprod=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-
-FCprofile=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -qopt-report-file=foo.out -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-
-# -align array64byte 
-# -Wl,-stack_size,0x80000000 -- 2G
-# -Wl,-stack_size,0x20000000
-# -fast
-# -fp-model source
 
 ifeq ($(FCmode),debug)
   FC=$(FCdebug)
 else ifeq ($(FCmode),debugseq)
+  FC=$(FCdebugseq)
+else ifeq ($(FCmode),seq)
   FC=$(FCdebugseq)
 else ifeq ($(FCmode),profile)
   FC=$(FCprofile)
@@ -94,4 +93,5 @@ clean	:
 cleanall :
 	rm -f *.dat
 	rm -f *.jpg
+	rm -f *.csv
 	$(MAKE) clean	
