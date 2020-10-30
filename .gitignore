@@ -8,7 +8,6 @@
 !/
 !/toolbox2
 !/toolbox2/*.f90
-!/paddingtonFRB/
 !/paddingtonData/
 !/paddingtonData/*.zip
 !/paddingtonData/*.csv
