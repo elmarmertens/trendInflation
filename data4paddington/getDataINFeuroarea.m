@@ -15,23 +15,12 @@ clc
 % few things manually (also forces us to check things when updating the data)
 
 
-% % [ UPDATE ]
-% dates    = genrMdates(1997,2020);
-% dates    = dates(2:end-2); % from 1997M2 until 2020M10
-% 
-% % other
-% T        = length(dates);
-% Ny       = 1;     % actual inflation plus 3 SPF
-% Ydata    = NaN(T,Ny); % this will be the output of this program
-
-
 %% input files
 
 COREimport     = importdata('HICPcoresdw.csv'); % headline and core
-% GDPDimport     = importdata('GDPDsdw.csv');
 
 Ylabel = {'HICP', 'HICPcore'};
-Ny     = length(Ylabel);     % actual inflation plus 3 SPF
+Ny     = length(Ylabel);     
 datalabel   = 'HICPeuroarea';
 
 
@@ -54,9 +43,9 @@ hicpInflation = diff(log(hicpdata)) * 1200;
 dates         = sdwdates(2:end);
 
 % plot
-figure
-plot(dates, hicpInflation)
-xtickdates(dates)
+% figure
+% plot(dates, hicpInflation)
+% xtickdates(dates)
 
 
 Ydata          = hicpInflation;
@@ -80,54 +69,81 @@ display(filename);
 type(filename)
 hrulefill
 
-return
+%% Add GDPD
 
-% 
-% %% convert into quarterly data 
-% if doQuarterly
-%     m       = month(sdwdates);
-%     qndx    = ismember(m, 3 : 3 : 12);
-%     qlevels = hicpdata(qndx);
-%     
-%     hicpInflationQ = [NaN; diff(log(qlevels))] * 400;
-%     % % check
-%     % check = sumK(hicpInflation, 3) / 3;
-%     % checkdiff(hicpInflationQ, check(qndx));
-%     
-%     qdates  = quarterlydates(sdwdates(qndx)); % beginning of quarter as in FRED
-%     
-% 
-%     dates         = qdates(2:end);
-%     hicpInflation = hicpInflationQ(2:end);
-% else
-%     hicpInflation = [NaN; diff(log(hicpdata))] * 1200;
-%     dates         = sdwdates(2:end);
-% end
-% 
-% %% plot
-% figure
-% plot(dates, hicpInflation)
-% datetick('x')
-% 
-% 
-% %% finish: store data
-% Ydata = hicpInflation;
-% 
-% if doQuarterly
-%     datalabel = strcat(datalabel, 'quarterly');
-% end
-% 
-% % treat missing data
-% yNaNndx        = isnan(Ydata);
-% Ydata(yNaNndx) = 0;
-% 
-% % store data
-% mat2fortran(sprintf('%s2020.yData.txt', datalabel), Ydata)
-% logical2fortran(sprintf('%s2020.yNaN.txt', datalabel), yNaNndx)
-% mat2fortran(sprintf('%s2020.dates.txt', datalabel), dates)
-% 
-% 
-% %% finish
-% dir *.txt
-% 
-% dockAllFigures
+
+Ylabel      = {'HICP', 'HICPcore', 'GDPD'};
+Ny          = length(Ylabel);    
+datalabel   = 'INFeuroarea';
+
+
+GDPDimport  = importdata('GDPDsdw.csv');
+sdwdates = datenum(GDPDimport.textdata(6:end,1), 'yyyyqq');
+gdpddata = GDPDimport.data;
+if length(sdwdates) ~= length(gdpddata)
+    error('import dimensions do not match')
+end
+% flip order (SDW starts with youngest data)
+sdwdates = flipud(sdwdates);
+gdpddata = flipud(gdpddata);
+
+gdpd     = diff(log(gdpddata)) * 400;
+sdwdates = sdwdates(2:end);
+% plot
+figure
+plot(sdwdates, gdpd)
+xtickdates(sdwdates)
+
+
+
+ud = union(dates, sdwdates);
+
+dates2 = genrMdates(1995,2020,1);
+dates2 = dates2(dates2 >= ud(1));
+dates2 = dates2(dates2 <= ud(end));
+
+
+
+T      = length(dates2);
+Ydata2 = NaN(T, Ny);
+
+ndxIn  = ismember(dates2, dates);
+ndxOut = ismember(dates, dates2);
+Ydata2(ndxIn,1:2) = hicpInflation(ndxOut,:);
+
+ndxIn  = ismember(dates2, sdwdates);
+ndxOut = ismember(sdwdates, dates2);
+Ydata2(ndxIn,3) = gdpd(ndxOut);
+
+
+% plot
+figure
+hold on
+plot(dates2, Ydata2, '-x')
+xtickdates(dates2)
+
+dates          = dates2;
+Ydata          = Ydata2;
+yNaNndx        = isnan(Ydata);
+Ydata(yNaNndx) = 0;
+
+
+
+
+mat2fortran(sprintf('%s.yData.txt', datalabel), Ydata)
+logical2fortran(sprintf('%s.yNaN.txt', datalabel), yNaNndx)
+mat2fortran(sprintf('%s.dates.txt', datalabel), dates)
+
+filename = sprintf('%s.settings.txt', datalabel);
+fid = fopen(filename, 'wt');
+fprintf(fid, 'Ny = %d\n', size(Ydata,2));
+fprintf(fid, 'T  = %d\n', size(Ydata,1));
+fprintf(fid, 'YLABEL:\n');
+for n = 1 : Ny
+    fprintf(fid, '%s\n', Ylabel{n});
+end
+fclose(fid);
+display(filename);
+type(filename)
+hrulefill
+

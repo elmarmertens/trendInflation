@@ -5,9 +5,13 @@ wrap = pwd;
 
 addpath toolbox2
 
-datalabel = 'INFTRM';
-datalabel = 'INF'; 
-T = 729; % needs to be adapted to the length of the actual input data
+% datalabel = 'INFTRM';
+% datalabel = 'INF'; 
+% datalabel = 'HICPeuroarea'; 
+% T = 285; % needs to be adapted to the length of the actual input data
+
+datalabel = 'INFeuroarea'; 
+T = 307; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  
@@ -170,7 +174,7 @@ for i = 1 : Ny
 end
 
 %% recent 12m data
-close all
+% close all
 
 for i = 1 : Ny 
     newfigure 
