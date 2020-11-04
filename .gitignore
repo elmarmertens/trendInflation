@@ -8,9 +8,9 @@
 !/
 !/toolbox2
 !/toolbox2/*.f90
-!/paddingtonData/
-!/paddingtonData/*.zip
-!/paddingtonData/*.csv
+!/data4paddington/
+!/data4paddington/*.zip
+!/data4paddington/*.csv
 .*
 ~*
 *~
