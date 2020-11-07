@@ -13,6 +13,9 @@ addpath toolbox2
 datalabel = 'INFeuroarea'; 
 T = 307; % needs to be adapted to the length of the actual input data
 
+datalabel = 'INFSRVeuroarea'; 
+T = 307; % needs to be adapted to the length of the actual input data
+
 samplestamp = sprintf('T%d', T);
  
 fortrandir = pwd;
