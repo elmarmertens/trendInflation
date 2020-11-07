@@ -1,4 +1,4 @@
-%% construct europrix data set for project "cambridge"
+%% construct europrix data set for project "paddington"
 % Note: all simple rates of change are converted into log-differences
 
 %% clear workspace
@@ -8,26 +8,17 @@ close all
 fclose all;
 clc
 
-%% prepare variables
 
-% quarters are time-stamped on the first day of the quarter (FRED convention)
-% note: the following could also be automated, but might be good to set a
-% few things manually (also forces us to check things when updating the data)
-
-
-%% input files
-
-COREimport     = importdata('HICPcoresdw.csv'); % headline and core
+%% process HICP
+HICPimport     = importdata('HICPcoresdw.csv'); % headline and core
 
 Ylabel = {'HICP', 'HICPcore'};
 Ny     = length(Ylabel);     
 datalabel   = 'HICPeuroarea';
 
+sdwdates = datenum(HICPimport.textdata(6:end,1), 'yyyymmm');
 
-%% process HICP
-sdwdates = datenum(COREimport.textdata(6:end,1), 'yyyymmm');
-
-hicpdata = COREimport.data;
+hicpdata = HICPimport.data;
     
 
 if length(sdwdates) ~= length(hicpdata)
