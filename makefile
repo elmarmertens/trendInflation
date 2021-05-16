@@ -9,27 +9,27 @@ UNAME := $(shell uname)
 
 ifeq ($(UNAME), Darwin)
   # mac
-  FCdebugseq=ifort -mkl -warn all -warn noexternals -WB -check all -check noarg_temp_created -static-intel -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-  FCdebug=ifort -mkl -warn all -WB -warn noexternals -check all -check noarg_temp_created -static-intel -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-  FCprod=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-  FCprofile=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -qopt-report-file=foo.out -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCfulldebugseq=ifort -mkl -warn all -warn noexternals -WB -check all -check bounds -g -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCdebugseq=ifort -mkl -warn all -warn noexternals -WB -check all -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCfulldebug=ifort -mkl -warn all -WB -warn noexternals -check all -check bounds -traceback -g -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCdebug=ifort -mkl -warn all -WB -warn noexternals -check all -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCprod=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
 else
   # linux
   FCdebugseq=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel 
   FCdebug=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel -qopenmp 
+  FCfulldebug=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel -qopenmp 
   FCprod=ifort -O3 -mkl -nocheck -qopenmp  -shared-intel  -xHost 
-  FCprofile=ifort -O3 -mkl -nocheck -qopenmp  -shared-intel -xHost -qopt-report-file=foo.out
 endif
-
 
 ifeq ($(FCmode),debug)
   FC=$(FCdebug)
 else ifeq ($(FCmode),debugseq)
   FC=$(FCdebugseq)
-else ifeq ($(FCmode),seq)
-  FC=$(FCdebugseq)
-else ifeq ($(FCmode),profile)
-  FC=$(FCprofile)
+else ifeq ($(FCmode),fulldebug)
+  FC=$(FCfulldebug)
+else ifeq ($(FCmode),fulldebugseq)
+  FC=$(FCfulldebugseq)
 else
   FC=$(FCprod)
 endif
@@ -42,8 +42,8 @@ timerbox=OMPtimerbox
 main  : $(THIS)
 toolboxes : $(toolboxes)
 
-$(THIS)  : $(THIS).f90 $(toolboxes)
-	$(FC) $(THIS).f90 -o $(THIS) $(toolboxes)
+$(THIS)  : $(THIS).f90 $(toolboxes) 
+	$(FC) $(THIS).f90 -o $(THIS) $(toolboxes) 
 
 
 
@@ -71,19 +71,19 @@ gibbsbox.o  : $(toolboxdir)gibbsbox.f90 timerbox.o blaspackbox.o statespacebox.o
 vslbox.o  : $(toolboxdir)$(vslbox).f90 
 	$(FC) -c $(toolboxdir)$(vslbox).f90 -o vslbox.o
 
-compile	: $(THIS)
+compile	: $(THIS) 
 
 run	: $(THIS)
 	rm -f *.debug
 	time -p ./$(THIS) $(datalabel)
 
-
-edit :
+edit : 
 	aquamacs $(THIS).f90 
 
 clean	:	
 	rm -f $(THIS) 
 	rm -f *.debug
+	rm -rf *.dSYM
 	rm -f *_genmod.f90
 	rm -f *.log
 	rm -f *.mod

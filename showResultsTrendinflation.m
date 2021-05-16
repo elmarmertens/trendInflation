@@ -6,8 +6,8 @@ wrap = pwd;
 addpath toolbox2
 
 datalabel = 'INFTRM';
-datalabel = 'INF'; 
-T = 729; % needs to be adapted to the length of the actual input data
+% datalabel = 'INF'; 
+T = 736; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  
@@ -231,7 +231,7 @@ end
 coreNdx = 1;
 hrulefill
 tableNdx = find(ismember(dates, [datenum(2007,12,1);datenum(2015,12,1);datenum(2016,12,1)';datenum(2017,3:3:12,1)';datenum(2018,3:3:12,1)']));
-tableNdx = cat(1, tableNdx, (T-3:T)');
+tableNdx = cat(1, tableNdx, (T-12:T)');
 tableNdx = unique(tableNdx);
 for i = 1 : length(tableNdx)
     
