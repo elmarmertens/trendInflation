@@ -89,7 +89,7 @@ title('GDPD')
 
 ud = union(dates, spfsdwdates);
 
-dates2 = genrMdates(1995,2020,1);
+dates2 = genrMdates(1995,2021,1);
 dates2 = dates2(dates2 >= ud(1));
 dates2 = dates2(dates2 <= ud(end));
 

@@ -11,10 +11,10 @@ addpath toolbox2
 % T = 285; % needs to be adapted to the length of the actual input data
 
 datalabel = 'INFeuroarea'; 
-T = 307; % needs to be adapted to the length of the actual input data
+T = 314; % needs to be adapted to the length of the actual input data
 
 datalabel = 'INFSRVeuroarea'; 
-T = 307; % needs to be adapted to the length of the actual input data
+% T = 307; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  

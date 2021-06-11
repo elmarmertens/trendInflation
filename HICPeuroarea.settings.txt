@@ -1,5 +1,5 @@
 Ny = 2
-T  = 285
+T  = 292
 YLABEL:
 HICP
 HICPcore
