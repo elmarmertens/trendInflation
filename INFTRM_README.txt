@@ -1,5 +1,5 @@
 Data List: INFTRM
-Data Updated: 2021-06-10
+Data Updated: 2021-10-13
 
 FRED (Federal Reserve Economic Data)
 Link: https://fred.stlouisfed.org
