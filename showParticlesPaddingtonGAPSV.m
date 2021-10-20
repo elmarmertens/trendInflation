@@ -15,6 +15,9 @@ showGains    = true;
 datalabel = 'INFTRM';
 T = 741;
 
+datalabel = 'INFSRVeuroarea'; 
+T = 314; % needs to be adapted to the length of the actual input data
+
 mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);
 
 timestamp = [];
@@ -49,7 +52,7 @@ Ny  = size(y,2);
 Nstates = Ny * 2;
 Nsv     = 1 + Ny;
 
-dates = genrMdates(1960,2030);
+dates = importdata(fullfile(datadir, sprintf('%s.dates.txt', datalabel)));
 dates = dates(1:T);
 
 type(fullfile(datadir, strcat('settings.', filext)));
@@ -300,7 +303,7 @@ if showGains
         %     limmerick = ylim;
         %     ylim([limmerick(1) limmerick(2) * 1.2])
         set(gca, 'xtick', dates(1 : 60 : end))
-        xlim([dates(ndx(1) - 12)  datenum(2016,1,1)])
+        % xlim([dates(ndx(1) - 12)  datenum(2016,1,1)])
         datetick('x', 'yyyy', 'keeplimits', 'keepticks')
         legend(hanni(activeNdx), Ylabel{activeNdx}, 'location', 'northeast')
         title(sprintf('%s', monthLabels{thisMonth}))

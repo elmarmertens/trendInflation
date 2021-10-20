@@ -7,31 +7,34 @@ wrap = pwd;
 
 addpath matbox
 
-datalabel = 'INFTRM';
-T = 741; % needs to be adapted to the length of the actual input data
+% datalabel = 'INFTRM';
+% T = 741; % needs to be adapted to the length of the actual input data
+
+datalabel = 'INFeuroarea'; 
+T = 314; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  
-fortrandir = pwd;
+datadir    = pwd;
 timestamp  = 'notrendslopes';
 
 
 
 %% get data
 
-y  = importdata(fullfile(fortrandir, sprintf('%s.yData.txt', datalabel)));
+y  = importdata(fullfile(datadir, sprintf('%s.yData.txt', datalabel)));
 Ny = size(y,2);
 Nstates = Ny * 2;
 Nsv = Ny;
 
 
-foo = importdata(fullfile(fortrandir, sprintf('%s.settings.txt', datalabel)));
+foo = importdata(fullfile(datadir, sprintf('%s.settings.txt', datalabel)));
 Ylabel = foo(4:end,1);
 
 % Ylabel = cellfun(@(x) sprintf('%s-%s', datalabel, x), Ylabel, 'UniformOutput', false) 
 Ylabel = strcat(datalabel, '-', Ylabel);
 
-filename = fullfile(fortrandir, sprintf('%s.yNaN.txt', datalabel));
+filename = fullfile(datadir, sprintf('%s.yNaN.txt', datalabel));
 if exist(filename, 'file')
     yNaN = logical(importdata(filename));
     y(yNaN) = NaN;
@@ -42,7 +45,7 @@ ybar = nanmean(y,2);
 filename = sprintf('%s.label.txt', datalabel);
 
 
-dates = importdata(fullfile(fortrandir, sprintf('%s.dates.txt', datalabel)));
+dates = importdata(fullfile(datadir, sprintf('%s.dates.txt', datalabel)));
 
 if ~isempty(T)
     dates = dates(1:T);
@@ -65,15 +68,15 @@ if ~isempty(timestamp)
 end
 
 
-type(fullfile(fortrandir, strcat('settings.', fileext)));
+type(fullfile(datadir, strcat('settings.', fileext)));
 
 
-tau         = importdata(fullfile(fortrandir, sprintf('TAU1.%s', fileext)));
+tau         = importdata(fullfile(datadir, sprintf('TAU1.%s', fileext)));
 
-sigtrend    = importdata(fullfile(fortrandir, sprintf('SIGTREND.%s', fileext)));
+sigtrend    = importdata(fullfile(datadir, sprintf('SIGTREND.%s', fileext)));
 siggap      = NaN(size(sigtrend,1), size(sigtrend,2), Ny);
 for n = 1 : Ny
-    siggap(:,:,n)  = importdata(fullfile(fortrandir, sprintf('SIGGAP%d.%s', n, fileext)));
+    siggap(:,:,n)  = importdata(fullfile(datadir, sprintf('SIGGAP%d.%s', n, fileext)));
 end
 % maxlambda   = importdata(fullfile(fortrandir, sprintf('MAXLAMBDA.%s', fileext)));
 % hvarbar     = loaddat(fullfile(fortrandir, sprintf('HVARBAR.%s', fileext)));
@@ -84,12 +87,12 @@ Ndraws      = length(tau);
 
 TAU = NaN(T, 12, Ny);
 for i = 1 : Ny
-    TAU(:,:,i)    = importdata(fullfile(fortrandir, sprintf('TAU%d.%s', i, fileext)));
+    TAU(:,:,i)    = importdata(fullfile(datadir, sprintf('TAU%d.%s', i, fileext)));
 end
 
 STATES = NaN(T, 12, Nstates);
 for i = 1 : Nstates
-    STATES(:,:,i)    = importdata(fullfile(fortrandir, sprintf('STATES%d.%s', i, fileext)));
+    STATES(:,:,i)    = importdata(fullfile(datadir, sprintf('STATES%d.%s', i, fileext)));
 end
 
 % % slopes
