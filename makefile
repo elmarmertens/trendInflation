@@ -3,7 +3,7 @@ datalabel ?= INFTRM
 # THIS ?= particlefilterPaddingtonGAPSV
 # note: toolbox2 needs updating before particlefilter can be used
 
-toolboxes=statespacebox.o vslbox.o embox.o gibbsbox.o timerbox.o blaspackbox.o cmcbox.o densitybox.o
+toolboxes=statespacebox.o vslbox.o embox.o gibbsbox.o timerbox.o blaspackbox.o densitybox.o
 
 UNAME := $(shell uname)
 
@@ -35,7 +35,7 @@ else
 endif
 
 
-toolboxdir=toolbox2/
+toolboxdir=fortranbox/
 vslbox=INTELvslbox
 timerbox=OMPtimerbox
 
@@ -53,9 +53,6 @@ statespacebox.o :: $(toolboxdir)statespacebox.f90 blaspackbox.o embox.o vslbox.o
 embox.o  : $(toolboxdir)embox.f90 vslbox.o
 	$(FC) -c $(toolboxdir)embox.f90 
 
-cmcbox.o  : $(toolboxdir)cmcbox.f90 
-	$(FC) -c $(toolboxdir)cmcbox.f90 
-
 densitybox.o  : $(toolboxdir)densitybox.f90 embox.o blaspackbox.o vslbox.o statespacebox.o
 	$(FC) -c $(toolboxdir)densitybox.f90 
 
@@ -65,7 +62,7 @@ blaspackbox.o  : $(toolboxdir)blaspackbox.f90  embox.o
 timerbox.o : $(toolboxdir)$(timerbox).f90 embox.o
 	$(FC) -c $(toolboxdir)$(timerbox).f90 -o timerbox.o
 
-gibbsbox.o  : $(toolboxdir)gibbsbox.f90 timerbox.o blaspackbox.o statespacebox.o
+gibbsbox.o  : $(toolboxdir)gibbsbox.f90 timerbox.o blaspackbox.o statespacebox.o densitybox.o
 	$(FC) -c $(toolboxdir)gibbsbox.f90 
 
 vslbox.o  : $(toolboxdir)$(vslbox).f90 
