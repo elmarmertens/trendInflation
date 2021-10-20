@@ -3,16 +3,12 @@
 !*.f90
 !*.m
 !*.txt
+!*.csv
 !*.sh
 *__genmod*
 !/
 !/matbox
 !/fortranbox
-!/toolbox2
-!/toolbox2/*.f90
-!/paddingtonData/
-!/paddingtonData/*.zip
-!/paddingtonData/*.csv
 .*
 ~*
 *~

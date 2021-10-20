@@ -1,0 +1,6 @@
+Ny = 3
+T  = 314
+YLABEL:
+HICP
+HICPcore
+GDPD
