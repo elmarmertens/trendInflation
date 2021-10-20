@@ -10,7 +10,7 @@ addpath matbox
 % datalabel = 'INFTRM';
 % T = 741; % needs to be adapted to the length of the actual input data
 
-datalabel = 'INFeuroarea'; 
+datalabel = 'INFSRVeuroarea'; 
 T = 314; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
@@ -253,8 +253,8 @@ for i = 1 : length(tableNdx)
 end
 
 %% store data table
-writedatatable(".", sprintf('Trend-%s', Ylabel{coreNdx}), ...
-    dates, TAU(:, [ndxmean ndxtails]), {'posterior mean', 'posterior 5\% quantile', 'posterior 95\% quantile'}, 'yyyymmm');
+% writedatatable(".", sprintf('Trend-%s', Ylabel{coreNdx}), ...
+%     dates, TAU(:, [ndxmean ndxtails]), {'posterior mean', 'posterior 5\% quantile', 'posterior 95\% quantile'}, 'yyyymmm');
 
 %% finish
 dockAllFigures

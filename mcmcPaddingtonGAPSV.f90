@@ -324,8 +324,16 @@ PROGRAM main
      WRITE (*,*) 'STORED SIGGAP', i
   END DO
 
-
   DEALLOCATE(theta)
+
+  ALLOCATE (theta(Nbar,Ndraws))
+  filename  = 'INITIALTAU' // filext
+  FORALL (i=1:Nbar,k=1:Nsim,j=1:Nstreams) theta(i,(j-1) * Nsim + k) = DRAWstates(i,1,k,j)
+  ! call savemat(transpose(theta), filename)
+  CALL storeEstimates(theta,Nbar,Ndraws,filename)
+  WRITE (*,*) 'STORED INITIAL TAU'
+  DEALLOCATE(theta)
+
 
 
   ALLOCATE(theta(NhSigma,Ndraws))
