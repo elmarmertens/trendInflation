@@ -9,17 +9,17 @@ UNAME := $(shell uname)
 
 ifeq ($(UNAME), Darwin)
   # mac
-  FCfulldebugseq=ifort -mkl -warn all -warn noexternals -WB -check all -check bounds -g -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-  FCdebugseq=ifort -mkl -warn all -warn noexternals -WB -check all -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-  FCfulldebug=ifort -mkl -warn all -WB -warn noexternals -check all -check bounds -traceback -g -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-  FCdebug=ifort -mkl -warn all -WB -warn noexternals -check all -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
-  FCprod=ifort -O3 -mkl -nocheck -qopenmp -static-intel -xHost -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCfulldebugseq=ifort -qmkl -warn all -warn noexternals -WB -check all -check bounds -g -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCdebugseq=ifort -qmkl -warn all -warn noexternals -WB -check all -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCfulldebug=ifort -qmkl -warn all -WB -warn noexternals -check all -check bounds -traceback -g -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCdebug=ifort -qmkl -warn all -WB -warn noexternals -check all -check noarg_temp_created -static-intel -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x20000000  -qopenmp -Wl,-rpath,$(MKLROOT)/../compiler/lib/
+  FCprod=ifort -O3 -qmkl -nocheck -qopenmp -static-intel -xHost -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -Wl,-stack_size,0x80000000 -Wl,-rpath,$(MKLROOT)/../compiler/lib/
 else
   # linux
-  FCdebugseq=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel 
-  FCdebug=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel -qopenmp 
-  FCfulldebug=ifort -mkl -warn all -WB -check all -check noarg_temp_created  -shared-intel -qopenmp 
-  FCprod=ifort -O3 -mkl -nocheck -qopenmp  -shared-intel  -xHost 
+  FCdebugseq=ifort -qmkl -warn all -WB -check all -check noarg_temp_created  -shared-intel 
+  FCdebug=ifort -qmkl -warn all -WB -check all -check noarg_temp_created  -shared-intel -qopenmp 
+  FCfulldebug=ifort -qmkl -warn all -WB -check all -check noarg_temp_created  -shared-intel -qopenmp 
+  FCprod=ifort -O3 -qmkl -nocheck -qopenmp  -shared-intel  -xHost 
 endif
 
 ifeq ($(FCmode),debug)
