@@ -5,9 +5,9 @@ wrap = pwd;
 
 addpath toolbox2
 
-datalabel = 'INFTRM';
+datalabel = 'INF';
 % datalabel = 'INF'; 
-T = 736; % needs to be adapted to the length of the actual input data
+T = 737; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  
