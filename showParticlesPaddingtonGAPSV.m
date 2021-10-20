@@ -12,7 +12,7 @@ showSmoother = false;
 showGains    = true;
 
 
-datalabel = 'INF';
+datalabel = 'INFTRM';
 T = 741;
 
 mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);
@@ -284,15 +284,17 @@ if showGains
         else
             hold on
             
+            hanni = bar(dates(ndx), thisGAIN, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
+
             % positive values
-            theseValues = thisGAIN;
-            theseValues(theseValues > 0) = NaN;
-            bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor)
-            
-            % negative values
-            theseValues = thisGAIN;
-            theseValues(theseValues < 0) = NaN;
-            bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor)
+            %             theseValues = thisGAIN;
+            %             theseValues(theseValues > 0) = NaN;
+            %             hpos = bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
+            %
+            %             % negative values
+            %             theseValues = thisGAIN;
+            %             theseValues(theseValues < 0) = NaN;
+            %             hneg = bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
             
         end
         %     limmerick = ylim;
@@ -300,7 +302,7 @@ if showGains
         set(gca, 'xtick', dates(1 : 60 : end))
         xlim([dates(ndx(1) - 12)  datenum(2016,1,1)])
         datetick('x', 'yyyy', 'keeplimits', 'keepticks')
-        legend(Ylabel{activeNdx}, 'location', 'northeast')
+        legend(hanni(activeNdx), Ylabel{activeNdx}, 'location', 'northeast')
         title(sprintf('%s', monthLabels{thisMonth}))
         colormap jet
         wrapcf(sprintf('GAINmonth%d', thisMonth), wrap)
@@ -434,5 +436,7 @@ if showSmoother
     
 end
 
+%% finish
+dockAllFigures
 
 
