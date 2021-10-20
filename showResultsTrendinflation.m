@@ -5,9 +5,8 @@ wrap = pwd;
 
 addpath toolbox2
 
-datalabel = 'INF';
-% datalabel = 'INF'; 
-T = 737; % needs to be adapted to the length of the actual input data
+datalabel = 'INFTRM';
+T = 741; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  
@@ -170,14 +169,17 @@ for i = 1 : Ny
 end
 
 %% recent 12m data
-close all
-
 for i = 1 : Ny 
     newfigure 
     plotCIlines(TAU(:,ndxmean,i), TAU(:,ndxtails,i), dates)
     hold on
-    y12m = sumK(y(:,i), 12) / 12;
-    plotynoncompact(dates, y12m, [1 0 0]);
+    if iscompact(y(:,i))
+        y12m = sumK(y(:,i), 12) / 12;
+        plot(dates, y12m, 'r-', 'LineWidth', 2);
+    else
+        plot(dates, y(:,i), 'r-o', 'linewidth', 2);
+    end
+
     xtickdates(dates(dates >= datenum(1999,1,1)))
     ylim([min([ylim, 0]) max([ylim, 4])])
     grid on
