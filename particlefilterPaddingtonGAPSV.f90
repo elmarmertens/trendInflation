@@ -86,7 +86,8 @@ PROGRAM main
   parameterlabel   = 'DEFAULT'
 
 
-  call getarguments(datalabel, parameterlabel) 
+  T = 0
+  call getarguments(datalabel, T, parameterlabel) 
   IF (parameterlabel == 'DEFAULT')  parameterlabel = datalabel
   call getsettings(parameterlabel,Ny)
 
@@ -132,17 +133,20 @@ PROGRAM main
   fileXT = '.particles.' // trim(datalabel) // '.gapSV.dat'
   if (doTimeStamp) filext = '.' // timestampstr() //  filext
 
-  parameterXT   = '.notrendslopes.' // trim(parameterlabel) // '.T689.gapSV.dat'
-
   datafile    = trim(datalabel) // '.yData.txt'
   nandatafile = trim(datalabel) // '.yNaN.txt'
 
   ! read data
-  T = loft(datafile) 
-  IF (T < 10) THEN
-     print *, 'Less than 10 observations in input file!', datafile
-     STOP 1
-  END IF
+  if (T == 0) then
+     T = loft(datafile) 
+     IF (T < 10) THEN
+        print *, 'Less than 10 observations in input file!', datafile
+        STOP 1
+     END IF
+  end if
+
+
+  parameterXT   = '.notrendslopes.' // trim(parameterlabel) // '.T' // trim(int2str(T))  // '.gapSV.dat'
 
   ALLOCATE (y(Ny,T), yNaN(Ny,T), STAT=status)
   IF (status /= 0) THEN
@@ -605,13 +609,14 @@ PROGRAM main
 CONTAINS
 
 
-  SUBROUTINE getarguments(datalabel,parameterlabel)
+  SUBROUTINE getarguments(datalabel,T,parameterlabel)
 
-    INTENT(INOUT) datalabel,parameterlabel
+    INTENT(INOUT) datalabel,parameterlabel,T
 
     CHARACTER (LEN=100) :: datalabel,parameterlabel
+    INTEGER :: T
     INTEGER :: counter
-    ! CHARACTER(len=32) :: arg
+    CHARACTER(len=32) :: arg
 
     counter = 0
     IF (command_argument_count() == 0) THEN
@@ -622,6 +627,12 @@ CONTAINS
     counter = counter + 1
     IF (command_argument_count() >= counter) THEN
        CALL get_command_argument(counter, datalabel) 
+    END IF
+
+    counter = counter + 1
+    IF (command_argument_count() >= counter) THEN
+       CALL get_command_argument(counter, arg)
+       READ(arg, '(i20)') T
     END IF
 
     counter = counter + 1

@@ -1,4 +1,6 @@
 %% plot ucsv fortran results
+path(pathdef)
+clear var
 close all
 clc
 wrap = pwd;

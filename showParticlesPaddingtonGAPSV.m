@@ -1,17 +1,21 @@
 %% plot ucsv fortran results
-initscript
-if isunix
-    initwrap
-end
+
+clear var
+close all
+clc
+wrap = pwd;
+
+path(pathdef)
+addpath matbox
 
 showSmoother = false;
 showGains    = true;
 
 
-datalabel = 'INFTRM';
+datalabel = 'INF';
+T = 741;
 
-
-mcmclabel = sprintf('notrendslopes.%s.T689', datalabel);
+mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);
 
 timestamp = [];
 primaryNdx  = 1;
@@ -38,7 +42,9 @@ foo = importdata(fullfile(datadir, sprintf('%s.settings.txt', datalabel)));
 Ylabel = foo(4:end,1);
 
 %% read results
-T   = size(y,1);
+if T ~= size(y,1)
+    error('dimension mismatch')
+end
 Ny  = size(y,2);
 Nstates = Ny * 2;
 Nsv     = 1 + Ny;
@@ -143,16 +149,15 @@ horizons = [1, 4, 8, 12, 16];
 for i = 1 : Ny
     newfigure(sprintf('tau %d -- %s', i, Ylabel{i}))
     set(gcf, 'Renderer', 'painters')
-    % plotCI(TAU(:,ndxmean,i), TAU(:,ndxtails,i), dates)
-    plotCI(TAUhat(:,i), TAU(:,ndxtails,i), dates)
-    plot(dates, TAU(:,ndxmean,i), 'r--')
+    plotCI(TAUhat(:,i), TAU(:,ndxtails,i), dates, [], 'w-.');
+    %     plot(dates, TAU(:,ndxmean,i), '--', 'color', 'red')
     hold on
     
     plotynoncompact(dates, y(:,i), [1 0 0]);
     plothorzline(2, [], 'k-');
-    ylim([-2 16])
+    %     ylim([-4 16])
     nberlines(dates)
-    plotOrigin
+    %     plotOrigin
     title(Ylabel{i})
     wrapcf(sprintf('tau%s', Ylabel{i}), wrap)
 end
@@ -330,7 +335,7 @@ for s = 1 : Nsv
     newfigure(sprintf('SV %d', s))
     set(gcf, 'Renderer', 'painters')
     hold on
-    plotCI(SV(:,ndxmean,s), SV(:,ndxtails,s), dates)
+    plotCI(SV(:,ndxmean,s), SV(:,ndxtails,s), dates);
     if showSmoother
         plotCIlines(SVsmoother(:,ndxmean,s), SVsmoother(:,ndxtails,s), dates, [], 'r')
     end
@@ -375,10 +380,10 @@ if showSmoother
         %         plot(dates, y(:,i), 'mx')
         %         plot(dates, y(:,i), 'mo')
         %     end
-        ylim([-2 16])
+        ylim([-4 16])
         plothorzline(2, [], 'k-');
         nberlines(dates)
-        plotOrigin
+        %         plotOrigin
         title(Ylabel{i})
         wrapcf(sprintf('SMOOTHERtau%s', Ylabel{i}), wrap)
     end
@@ -431,7 +436,3 @@ end
 
 
 
-%% finish
-finishwrap
-dockAllFigures
-finishscript
