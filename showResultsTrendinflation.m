@@ -10,8 +10,8 @@ addpath matbox
 % datalabel = 'INFTRM';
 % T = 741; % needs to be adapted to the length of the actual input data
 
-datalabel = 'INFSRVeuroarea'; 
-T = 314; % needs to be adapted to the length of the actual input data
+datalabel = 'SDWINFCORE'; 
+T = 296; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  

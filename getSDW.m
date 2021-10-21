@@ -18,7 +18,7 @@ sdwdates  = flipud(sdwdates);
 
 % colheaders = SDWimport.textdata(2,:)
 
-[y m]      = datevec(sdwdates);
+[y, m]      = datevec(sdwdates);
 dates      = datenum(y,m,1); % FRED convention: dated at beginning of month
 dates      = dates(2:end); % since data will be differenced
 T          = length(dates);
@@ -26,7 +26,7 @@ T          = length(dates);
 %% collect HICP
 Ylabel      = {'HICP', 'HICPcore'};
 Ny          = length(Ylabel);     
-datalabel   = 'HICPeuroarea';
+datalabel   = 'HICP';
 
 ndx = [12 13];    
 hicpdata = SDWimport.data(:,ndx);

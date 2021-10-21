@@ -12,11 +12,11 @@ showSmoother = false;
 showGains    = true;
 
 
-datalabel = 'INFTRM';
-T = 741;
+% datalabel = 'INFTRM';
+% T = 741;
 
-datalabel = 'INFSRVeuroarea'; 
-T = 314; % needs to be adapted to the length of the actual input data
+datalabel = 'SDWINFCORE'; 
+T = 296; % needs to be adapted to the length of the actual input data
 
 mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);
 

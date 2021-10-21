@@ -1,9 +1,0 @@
-Ny = 6
-T  = 314
-YLABEL:
-HICP
-HICPcore
-GDPD
-SPF12m
-SPF24m
-SPFltr
