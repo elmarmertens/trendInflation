@@ -92,7 +92,7 @@ PROGRAM main
   call getsettings(parameterlabel,Ny)
 
 
-  p      = 1
+  p      = 12
   
   Nshockslopes = Ny * (Ny - 1) / 2
   NhgapSigma   = Ny * (Ny + 1) / 2

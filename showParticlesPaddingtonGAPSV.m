@@ -15,7 +15,7 @@ showGains    = true;
 % datalabel = 'INFTRM';
 % T = 741;
 
-datalabel = 'SDWINFCORE'; 
+datalabel = 'SDWINF';
 T = 296; % needs to be adapted to the length of the actual input data
 
 mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);
@@ -86,7 +86,7 @@ if showGains
     %             GAINGAP(:,:,s,n)   = importdata(fullfile(datadir, sprintf('GAIN%dGAP%d.%s', n, s, filext)));
     %         end
     %     end
-    
+
     [GAINTAUhat, GAINGAPhat] = deal(NaN(T,Ny,Ny));
     for s = 1 : Ny
         GAINTAUhat(:,:,s)   = importdata(fullfile(datadir, sprintf('GAINTAUHAT%d.%s', s, filext)));
@@ -118,18 +118,18 @@ if showSmoother
     %     for s = 1 : Ny
     %         GAPsmoother(:,:,s)   = importdata(fullfile(datadir, sprintf('smootherGAP%d.%s', s, filext)));
     %     end
-    
+
     SVsmoother = NaN(T,12,Nsv);
     for s = 1 : Nsv
         SVsmoother(:,:,s)   = importdata(fullfile(datadir, sprintf('smootherSV%d.%s', s, filext)));
     end
-    
+
     SVmcmc = NaN(T, 12, Nsv);
     SVmcmc(:,:,1) = importdata(fullfile(datadir, sprintf('SIGTREND.%s', mcmcxt)));
     for n = 1 : Ny
         SVmcmc(:,:,1+n) = importdata(fullfile(datadir, sprintf('SIGGAP%d.%s', n, mcmcxt)));
     end
-    
+
 end
 
 % read mcmc level
@@ -137,7 +137,7 @@ TAUmcmc = NaN(T,12,Ny);
 for n = 1 : Ny
     TAUmcmc(:,:,n) = importdata(fullfile(datadir, sprintf('TAU%d.%s', n, mcmcxt)));
 end
-    
+
 % parameters
 hgap0 = importdata(fullfile(datadir, sprintf('HGAP0.%s', mcmcxt)));
 
@@ -155,7 +155,7 @@ for i = 1 : Ny
     plotCI(TAUhat(:,i), TAU(:,ndxtails,i), dates, [], 'w-.');
     %     plot(dates, TAU(:,ndxmean,i), '--', 'color', 'red')
     hold on
-    
+
     plotynoncompact(dates, y(:,i), [1 0 0]);
     plothorzline(2, [], 'k-');
     %     ylim([-4 16])
@@ -211,7 +211,7 @@ if showGains
         error('check gains')
     end
     primaryGAIN(yNaN) = NaN;
-    
+
     %     for j = 1 : Ny
     %         newfigure(sprintf('primary gain of %s', Ylabel{j}))
     %         hold on
@@ -224,8 +224,8 @@ if showGains
     %         xtickdates(dates)
     %         wrapcf(sprintf('primarygain%stau%s', Ylabel{j}), wrap)
     %     end
-    
-    
+
+
     %% monthly pictures
     %     for t = find(year(dates) == 2010, 1, 'first') : find(year(dates) == 2010, 1, 'last')
     %         figure
@@ -237,8 +237,8 @@ if showGains
     %         set(gca, 'ytick', -1 : .1 : 2)
     %         wrapcf(sprintf('GAIN%s', lower(datestr(dates(t), 'mmmyyyy'))), wrap)
     %     end
-    
-    
+
+
 
     %% stacked with negative values
     % close all
@@ -272,9 +272,9 @@ if showGains
     %         colormap bone
     %         wrapcf(sprintf('GAIN%d', thisYear), wrap)
     %     end
-    
+
     %% one month all years
-    
+
     monthLabels = {'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'};
     activeNdx   = any(~isnan(y),1);
     edgecolor = [1 1 1];
@@ -282,24 +282,24 @@ if showGains
         ndx = find(month(dates) == thisMonth & year(dates) >= 1965);
         figure
         thisGAIN = primaryGAIN(ndx,activeNdx);
-        if all(all(primaryGAIN(ndx,:) > 0))
-            bar(dates(ndx), thisGAIN, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor)
-        else
-            hold on
-            
-            hanni = bar(dates(ndx), thisGAIN, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
+        %         if all(all(primaryGAIN(ndx,:) > 0))
+        %             hanni = bar(dates(ndx), thisGAIN, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor)
+        %         else
+        %             hold on
 
-            % positive values
-            %             theseValues = thisGAIN;
-            %             theseValues(theseValues > 0) = NaN;
-            %             hpos = bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
-            %
-            %             % negative values
-            %             theseValues = thisGAIN;
-            %             theseValues(theseValues < 0) = NaN;
-            %             hneg = bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
-            
-        end
+        hanni = bar(dates(ndx), thisGAIN, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
+
+        % positive values
+        %             theseValues = thisGAIN;
+        %             theseValues(theseValues > 0) = NaN;
+        %             hpos = bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
+        %
+        %             % negative values
+        %             theseValues = thisGAIN;
+        %             theseValues(theseValues < 0) = NaN;
+        %             hneg = bar(dates(ndx), theseValues, 'stacked', 'linewidth', 1, 'EdgeColor', edgecolor);
+
+        %         end
         %     limmerick = ylim;
         %     ylim([limmerick(1) limmerick(2) * 1.2])
         set(gca, 'xtick', dates(1 : 60 : end))
@@ -309,7 +309,7 @@ if showGains
         title(sprintf('%s', monthLabels{thisMonth}))
         colormap jet
         wrapcf(sprintf('GAINmonth%d', thisMonth), wrap)
-        
+
         %% try surface
         %         %         thisGAIN = primaryGAIN(ndx,activeNdx);
         %         thisGAIN = primaryGAIN(:,activeNdx);
@@ -321,7 +321,7 @@ if showGains
         %         figure
         %         bar3(thisGAIN, 1)
         %         legend(Ylabel{activeNdx})
-        
+
     end
 end
 
@@ -336,7 +336,7 @@ wrapcf('ESS', wrap)
 for s = 1 : Nsv
 
 
-    
+
     newfigure(sprintf('SV %d', s))
     set(gcf, 'Renderer', 'painters')
     hold on
@@ -351,7 +351,7 @@ for s = 1 : Nsv
     datetick('x', 'keeplimits')
     grid on
     wrapcf(sprintf('SV%d', s), wrap)
-    
+
 end
 
 checkdiff(SVhat,squeeze(SV(:,1,:)));
@@ -373,12 +373,12 @@ if showSmoother
         hold on
         %     hanni(1) = plotCIlines(TAUsmoother(:,ndxmean,i), TAUsmoother(:,ndxtails,i), dates, [], [1 0 0]);
         %     hanni(2) = plot(dates, TAU(:,ndxmean,i), 'k--', 'linewidth', 3);
-        
-        
+
+
         hanni(1) = plotCI(TAUhat(:,i), TAU(:,ndxtails,i), dates);
         hanni(2) = plotCIlines(TAUsmoother(:,ndxmean,i), TAUsmoother(:,ndxtails,i), dates, [], [1 0 0]);
-        
-        
+
+
         %     hanni(3) = plotCIlines(mcmc.YGAP(:,ndxmean), mcmc.YGAP(:,ndxtails), dates, [], [0 .5 0]);
         %     plot(dates, y(:,i), 'm-')
         %     if ~iscompact(y(:,i))
@@ -392,9 +392,9 @@ if showSmoother
         title(Ylabel{i})
         wrapcf(sprintf('SMOOTHERtau%s', Ylabel{i}), wrap)
     end
-    
+
     %% compare smoother vs filter vs mcmc
-    
+
     hanni = NaN(3,1);
     for i = 1 : Ny
         newfigure(sprintf('tau %d -- %s', i, Ylabel{i}))
@@ -408,12 +408,12 @@ if showSmoother
         title(Ylabel{i})
         wrapcf(sprintf('COMPAREtau%s', Ylabel{i}), wrap)
     end
-    
+
     %% SV comparison
     hanni = NaN(3,1);
     SVgap0     = mean(exp(hgap0 / 2));
     SVgap0tail = prctile(exp(hgap0 / 2), [25 75]);
-    
+
     for i = 1 : Nsv
         newfigure(sprintf('SV %d ', i))
         set(gcf, 'Renderer', 'painters')
@@ -426,7 +426,7 @@ if showSmoother
             plothorzline(SVgap0tail(1,i-1), [], 'k-.', 'linewidth', 1)
             plothorzline(SVgap0tail(2,i-1), [], 'k-.', 'linewidth', 1)
         end
-        
+
         nberlines(dates)
         plotOrigin
         if i > 1
@@ -436,7 +436,7 @@ if showSmoother
         legend(hanni, 'Filter', 'Smoother', 'MCMC', 'location', 'best')
         wrapcf(sprintf('COMPAREsv%d', i), wrap)
     end
-    
+
 end
 
 %% finish
