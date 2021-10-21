@@ -74,3 +74,23 @@ fclose(fid);
 display(filename);
 type(filename)
 hrulefill
+
+%% INFTRM2 w/o PCEtrim
+dataLabel = 'INFTRM2';
+ndx = [1 2 3 4 6 7];
+mat2fortran(sprintf('%s.dates.txt', dataLabel), dates);
+logical2fortran(sprintf('%s.yNaN.txt', dataLabel), ynan(:,ndx));
+mat2fortran(sprintf('%s.yData.txt', dataLabel), data(:,ndx));
+
+filename = sprintf('%s.settings.txt', dataLabel);
+fid = fopen(filename, 'wt');
+fprintf(fid, 'Ny = %d\n', size(data(:,ndx),2));
+fprintf(fid, 'T  = %d\n', size(data,1));
+fprintf(fid, 'YLABEL:\n');
+for n = ndx
+    fprintf(fid, '%s\n', Ylabel{n});
+end
+fclose(fid);
+display(filename);
+type(filename)
+hrulefill
