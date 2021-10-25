@@ -1,0 +1,7 @@
+Ny = 4
+T  = 741
+YLABEL:
+PCE
+PCEcore
+CPI
+GDPD
