@@ -160,15 +160,17 @@ plot(dates, TRM)
 xtickdates(dates)
 
 datalabel = 'SDWINFTRM';
-Ydata     = [Ydata, TRM];
 
 TRMlabel = cell(size(ndx));
 trmcut   = 5 : 5 : 50;
 for n = 1 : length(ndx)
     TRMlabel{n} = sprintf('TRM-%d', trmcut(n));
 end
-Ylabel    = cat(2, Ylabel, TRMlabel);
 
+ndx = 3; % TRM15
+
+Ydata     = [Ydata, TRM(:,ndx)];
+Ylabel    = cat(2, Ylabel, TRMlabel(ndx));
 Ny             = size(Ydata, 2);
 yNaNndx        = isnan(Ydata);
 Ydata(yNaNndx) = 0;
