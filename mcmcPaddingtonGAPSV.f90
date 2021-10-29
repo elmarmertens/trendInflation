@@ -69,6 +69,9 @@ PROGRAM main
   Nsim    = 10 ** 3
   Burnin  = 10 ** 3
 
+  Nsim    = 10 ** 2
+  Burnin  = 10 ** 2
+
   datalabel = 'INFTRM'
 
   ! original settings

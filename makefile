@@ -1,5 +1,5 @@
 THIS ?= mcmcPaddingtonGAPSV
-datalabel ?= INFTRM
+DATALABEL ?= INFTRM
 p ?= 12
 # THIS ?= particlefilterPaddingtonGAPSV
 
@@ -72,7 +72,7 @@ compile	: $(THIS)
 
 run	: $(THIS)
 	rm -f *.debug
-	time -p ./$(THIS) $(datalabel) $(p)
+	time -p ./$(THIS) $(DATALABEL) $(p)
 
 edit : 
 	aquamacs $(THIS).f90 

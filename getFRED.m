@@ -35,11 +35,11 @@ switch datalabel
         qndx1   = 4;
     case 'INFTRMSRV'
         Ylabel  = {'PCE', 'PCEcore', 'CPI', 'GDPD', 'PCEtrim', 'CPItrim', 'CPImedian', ...
-            'SPFcpi10Y'}; % , 'SPFcpi1Y', 'SPFpce1Y', 'SPFgdpd1Y'}; %todo: livingston
+            'SPFcpi10Y', 'SPFcpi1Y', 'SPFpce1Y', 'SPFgdpd1Y'}; %todo: livingston
         mndx1   = [3 7 1 2 5 6];
         mndx2   = 1:6;
         qndx1   = 4;
-        spfndx  = 8;
+        spfndx  = 8:11;
         doSPF = true;
     otherwise
         error('datalabel <<%s>> not known', datalabel)
@@ -87,16 +87,37 @@ data(1:2,qndx1)   = NaN;
 %% load SPF data
 if doSPF
 
-    CPI10Y  = importdata('Median_CPI10_Level.xlsx');
-    
+    Nspf     = 1;
+
+    % first, read in CPI10Y
+    CPI10Y   = importdata('Median_CPI10_Level.xlsx');
     spfY     = CPI10Y.data(:,1);
     spfQ     = CPI10Y.data(:,2);
     spfdates = datenum(spfY, (spfQ - 1) * 3 + 2, 1); % assign to mid-of-quarter month
+    
+    SPFdata  = NaN(length(spfdates), Nspf);
+    SPFdata(:,1) = CPI10Y.data(:,3);
 
-    SPFdata = CPI10Y.data(:,3);
+    % read PCE, CPI etc.
+    SPFlabels = {'CPI', 'PCE', 'PGDP'};
+    for s = 1 : length(SPFlabels)
+        spfimport = importdata(sprintf('Median_%s_Level.xlsx', SPFlabels{s}));
+        if any(spfY ~= CPI10Y.data(:,1)) || any(spfQ  ~= CPI10Y.data(:,2))
+            error('date mismatch')
+        end
+        switch SPFlabels{s}
+            case 'PGDP'
+                thisdata = (log(spfimport.data(:,8)) - log(spfimport.data(:,4))) * 100;
+                thisdata = mean(thisdata,2);
+            otherwise
+                thisdata = log(1 + spfimport.data(:,5:8) / 100) * 100;
+                thisdata = mean(thisdata,2);
+        end
+        SPFdata(:,1+s) = thisdata;
+        
+    end
 
-    Nspf  = size(SPFdata, 2);
-
+    % patch SPFdata into data
     [~, ndx1, ndx2]   = intersect(dates, spfdates);
     data(ndx1,spfndx) = SPFdata(ndx2,:); 
 
