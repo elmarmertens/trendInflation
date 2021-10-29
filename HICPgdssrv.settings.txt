@@ -1,0 +1,5 @@
+Ny = 2
+T  = 296
+YLABEL:
+Goods
+Services
