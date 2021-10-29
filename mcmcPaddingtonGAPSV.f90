@@ -105,7 +105,7 @@ PROGRAM main
   errcode = vslnewstream(VSLdefaultstream, vsl_brng_mt2203, seed)  
   WRITE(*,*) "... default VSLstream ", VSLdefaultstream
   T = 0
-  call getarguments(datalabel, T)
+  call getarguments(datalabel,p,T)
   call getsettings(datalabel,Ny)
 
   call hrulefill
@@ -540,11 +540,11 @@ PROGRAM main
 CONTAINS
 
   ! -----------------------------------------------------------------
-  SUBROUTINE getarguments(datalabel, T)
+  SUBROUTINE getarguments(datalabel,p,T)
 
-    INTENT(INOUT) datalabel, T
+    INTENT(INOUT) datalabel, p, T
 
-    INTEGER :: T, counter
+    INTEGER :: T, p, counter
     CHARACTER (LEN=100) :: datalabel
     CHARACTER(len=32) :: arg
 
@@ -557,6 +557,12 @@ CONTAINS
     counter = counter + 1
     IF (command_argument_count() >= counter) THEN
        CALL get_command_argument(counter, datalabel) 
+    END IF
+
+    counter = counter + 1
+    IF (command_argument_count() >= counter) THEN
+       CALL get_command_argument(counter, arg)
+       READ(arg, '(i20)') p
     END IF
 
     counter = counter + 1

@@ -1,5 +1,6 @@
 THIS ?= mcmcPaddingtonGAPSV
 datalabel ?= INFTRM
+p ?= 12
 # THIS ?= particlefilterPaddingtonGAPSV
 
 toolboxes=statespacebox.o vslbox.o embox.o gibbsbox.o timerbox.o blaspackbox.o densitybox.o
@@ -71,7 +72,7 @@ compile	: $(THIS)
 
 run	: $(THIS)
 	rm -f *.debug
-	time -p ./$(THIS) $(datalabel)
+	time -p ./$(THIS) $(datalabel) $(p)
 
 edit : 
 	aquamacs $(THIS).f90 

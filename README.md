@@ -10,7 +10,6 @@ Complete replication files for the paper are here: http://dx.doi.org/10.7910/DVN
 
 ## TODO
 - construct data sets with US-SPF
-- add arguments: Nsim, burnin, p etc.
 - add SV(O)-(t) shocks
 - Minnesota priors, CTA or equationfilter code for VAR?
 - consider SV ratio process?

@@ -85,14 +85,14 @@ PROGRAM main
   datalabel        = 'INFTRM'
   parameterlabel   = 'DEFAULT'
 
+  p      = 12
 
   T = 0
-  call getarguments(datalabel, T, parameterlabel) 
+  call getarguments(datalabel, p, T, parameterlabel) 
   IF (parameterlabel == 'DEFAULT')  parameterlabel = datalabel
   call getsettings(parameterlabel,Ny)
 
 
-  p      = 12
   
   Nshockslopes = Ny * (Ny - 1) / 2
   NhgapSigma   = Ny * (Ny + 1) / 2
@@ -609,12 +609,12 @@ PROGRAM main
 CONTAINS
 
 
-  SUBROUTINE getarguments(datalabel,T,parameterlabel)
+  SUBROUTINE getarguments(datalabel,p,T,parameterlabel)
 
-    INTENT(INOUT) datalabel,parameterlabel,T
+    INTENT(INOUT) datalabel,parameterlabel,T,p
 
     CHARACTER (LEN=100) :: datalabel,parameterlabel
-    INTEGER :: T
+    INTEGER :: T, p
     INTEGER :: counter
     CHARACTER(len=32) :: arg
 
@@ -633,6 +633,12 @@ CONTAINS
     IF (command_argument_count() >= counter) THEN
        CALL get_command_argument(counter, arg)
        READ(arg, '(i20)') T
+    END IF
+
+    counter = counter + 1
+    IF (command_argument_count() >= counter) THEN
+       CALL get_command_argument(counter, arg)
+       READ(arg, '(i20)') p
     END IF
 
     counter = counter + 1
