@@ -11,9 +11,12 @@ dates    = genrMdates(1960,year(samEnd),1);
 dates    = dates(dates <= samEnd);
 T        = length(dates);
 
-datalabel = 'INFTRM';
+datalabel = 'INFTRMSRV';
 
 %% process datalabel
+
+doSPF = false;
+
 switch datalabel
     case 'INF'
         Ylabel = {'PCE', 'PCEcore', 'CPI', 'GDPD'};
@@ -30,6 +33,14 @@ switch datalabel
         mndx1   = [3 7 1 5 6];
         mndx2   = [1 2 3 5 6];
         qndx1   = 4;
+    case 'INFTRMSRV'
+        Ylabel  = {'PCE', 'PCEcore', 'CPI', 'GDPD', 'PCEtrim', 'CPItrim', 'CPImedian', ...
+            'SPFcpi10Y'}; % , 'SPFcpi1Y', 'SPFpce1Y', 'SPFgdpd1Y'}; %todo: livingston
+        mndx1   = [3 7 1 2 5 6];
+        mndx2   = 1:6;
+        qndx1   = 4;
+        spfndx  = 8;
+        doSPF = true;
     otherwise
         error('datalabel <<%s>> not known', datalabel)
 end
@@ -59,6 +70,7 @@ md.data(:,ppNdx)        = log(1 + md.data(:,ppNdx) / 100) * 100;
 
 
 
+
 %% prep destintion data and copy FRED data
 
 data = NaN(T,Ny);
@@ -72,6 +84,26 @@ data(ismember(dates, qd.dates), qndx1) = qd.data(q2dates,:);
 data(3:end,qndx1) = data(1:end-2,qndx1);
 data(1:2,qndx1)   = NaN;
 
+%% load SPF data
+if doSPF
+
+    CPI10Y  = importdata('Median_CPI10_Level.xlsx');
+    
+    spfY     = CPI10Y.data(:,1);
+    spfQ     = CPI10Y.data(:,2);
+    spfdates = datenum(spfY, (spfQ - 1) * 3 + 2, 1); % assign to mid-of-quarter month
+
+    SPFdata = CPI10Y.data(:,3);
+
+    Nspf  = size(SPFdata, 2);
+
+    [~, ndx1, ndx2]   = intersect(dates, spfdates);
+    data(ndx1,spfndx) = SPFdata(ndx2,:); 
+
+end
+
+
+%% write output files
 ynan = isnan(data);
 data(ynan) = 0;
 

@@ -5,6 +5,7 @@
 !*.txt
 !*.csv
 !*.sh
+!*.xls*
 *__genmod*
 !/
 !/matbox
