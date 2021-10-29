@@ -11,7 +11,9 @@ dates    = genrMdates(1960,year(samEnd),1);
 dates    = dates(dates <= samEnd);
 T        = length(dates);
 
-datalabel = 'INFTRMSRV';
+% datalabel = 'INFTRMSRV';
+
+datalabel = 'INFSRV';
 
 %% process datalabel
 
@@ -40,6 +42,14 @@ switch datalabel
         mndx2   = 1:6;
         qndx1   = 4;
         spfndx  = 8:11;
+        doSPF = true;
+    case 'INFSRV'
+        Ylabel  = {'PCE', 'PCEcore', 'CPI', 'GDPD', ...
+            'SPFcpi10Y', 'SPFcpi1Y', 'SPFpce1Y', 'SPFgdpd1Y'}; %todo: livingston
+        mndx1   = [1 2 3];
+        mndx2   = [3 4 1];
+        qndx1   = 4;
+        spfndx  = 5:8;
         doSPF = true;
     otherwise
         error('datalabel <<%s>> not known', datalabel)

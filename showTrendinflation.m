@@ -7,11 +7,11 @@ wrap = pwd;
 
 addpath matbox
 
-% datalabel = 'INF';
-% T = 741; % needs to be adapted to the length of the actual input data
+datalabel = 'INFTRMSRV';
+T = 741; % needs to be adapted to the length of the actual input data
 
-datalabel = 'HICP'; 
-T = 296; % needs to be adapted to the length of the actual input data
+% datalabel = 'HICP'; 
+% T = 296; % needs to be adapted to the length of the actual input data
 
 samplestamp = sprintf('T%d', T);
  

@@ -1,0 +1,11 @@
+Ny = 8
+T  = 741
+YLABEL:
+PCE
+PCEcore
+CPI
+GDPD
+SPFcpi10Y
+SPFcpi1Y
+SPFpce1Y
+SPFgdpd1Y
