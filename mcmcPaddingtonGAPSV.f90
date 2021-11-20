@@ -1,7 +1,5 @@
 PROGRAM main
 
-  ! command line arguments: datalabel, Ny, Nsim, burnin, Nstreams, p, sqrtVf0_firstlag, sqrtVf0_general
-
   USE embox, only : hrulefill, savemat, savevec, storeEstimates, storeEstimatesOMP, loft, timestampstr, es30d16, int2str
   USE blaspack, only : eye, vech
   USE gibbsbox, only : igammaDraw, iwishDraw, GelmanTest1, simpriormaxroot
@@ -19,7 +17,8 @@ PROGRAM main
 
   double precision, parameter :: shockslopesSTD = 1.0d-1
 
-  double precision :: sqrtVf0_firstlag, sqrtVf0_general
+  ! double precision :: sqrtVf0_firstlag, sqrtVf0_general
+  double precision :: lambda1Vf, lambda2Vf 
 
   INTEGER :: Nsim, Burnin, Nstreams
   INTEGER :: T,j,k,i,status,Ndraws
@@ -69,14 +68,11 @@ PROGRAM main
   Nsim    = 10 ** 3
   Burnin  = 10 ** 3
 
-  Nsim    = 10 ** 2
-  Burnin  = 10 ** 2
-
   datalabel = 'INFTRM'
 
   ! original settings
-  sqrtVf0_firstlag = 0.10d0
-  sqrtVf0_general  = 0.01d0
+  ! sqrtVf0_firstlag = 0.10d0
+  ! sqrtVf0_general  = 0.01d0
 
 
   p = 12
@@ -196,12 +192,15 @@ PROGRAM main
 
   ! VAR coefficients
   Ef0  = 0.0d0
-  call eye(sqrtVf0, sqrtVf0_general)
-  ! widen the prior for first-own-lag coefficients
-  DO j=1,NGap
-     k = (j-1)*(Ngap * p) + j
-     sqrtVf0(k,k) = sqrtVf0_firstlag
-  END DO
+  ! call eye(sqrtVf0, sqrtVf0_general)
+  ! ! widen the prior for first-own-lag coefficients
+  ! DO j=1,NGap
+  !    k = (j-1)*(Ngap * p) + j
+  !    sqrtVf0(k,k) = sqrtVf0_firstlag
+  ! END DO
+  lambda1Vf = 0.5d0
+  lambda2Vf = 0.2d0
+  call minnesotaVCVsqrt(sqrtVf0, Ny, p, lambda1Vf, lambda2Vf)
 
   ! shockslopes
   E0shockslopes = 0.0d0
@@ -216,8 +215,8 @@ PROGRAM main
   print *, 'Burnin= ', Burnin
   print *, 'Nstreams= ', Nstreams
   print *, 'p= ', p
-  print *, 'sqrtVf0_firstlag= ', sqrtVf0_firstlag
-  print *, 'sqrtVf0_general = ', sqrtVf0_general
+  ! print *, 'sqrtVf0_firstlag= ', sqrtVf0_firstlag
+  ! print *, 'sqrtVf0_general = ', sqrtVf0_general
   print *, 'sqrtV0shockslopes= ', sqrtV0shockslopes(1,1)
   CALL HRULEFILL
 
@@ -275,8 +274,8 @@ PROGRAM main
   if (doDiffuse) then
      WRITE(4,'(a20)') 'with diffuse VAR prior'
   else
-     WRITE(4,'(a20,f10.3)') 'sqrtVf0_firstlag= ', sqrtVf0_firstlag
-     WRITE(4,'(a20,f10.3)') 'sqrtVf0_general = ', sqrtVf0_general
+     ! WRITE(4,'(a20,f10.3)') 'sqrtVf0_firstlag= ', sqrtVf0_firstlag
+     ! WRITE(4,'(a20,f10.3)') 'sqrtVf0_general = ', sqrtVf0_general
      WRITE(4,'(a20,f10.3)') 'sqrtV0shockslopes:', sqrtV0shockslopes(1,1)
   end if
   WRITE(4,'(a20,f10.3)') 'trend min SV:', minSV(1)
@@ -541,6 +540,37 @@ PROGRAM main
   STOP
 
 CONTAINS
+
+  SUBROUTINE minnesotaVCVsqrt(sqrtVf0, N, p, lambda1, lambda2)
+
+    integer, intent(in) :: N, p
+    double precision, intent(inout), dimension(N*N*p,N*N*p) :: sqrtVf0
+    double precision, intent(in) :: lambda1, lambda2
+
+    integer :: ndxVec, ndxLHS = 1, ndxLag = 1, ndxRHS = 1
+    integer :: Nf
+
+    Nf = N * N * p
+    sqrtVf0 = 0.0d0
+
+    ndxVec = 0
+    do ndxLHS = 1,N
+       do ndxLag = 1,p
+          do ndxRHS = 1,N
+
+             ndxVec = ndxVec + 1
+
+             if (ndxLHS == ndxRHS) then
+                sqrtVf0(ndxVec,ndxVec) = lambda1 / dble(ndxLag)
+             else
+                sqrtVf0(ndxVec,ndxVec) = lambda1 * lambda2 / dble(ndxLag)
+             end if
+             
+          end do
+       end do
+    end do
+    
+  END SUBROUTINE minnesotaVCVsqrt
 
   ! -----------------------------------------------------------------
   SUBROUTINE getarguments(datalabel,p,T)

@@ -9,7 +9,6 @@ The `master` branch works with US as well as EuroAre data. US data provided by F
 Complete replication files for the paper are here: http://dx.doi.org/10.7910/DVN/MUF2HC
 
 ## TODO
-- construct data sets with US-SPF
 - add SV(O)-(t) shocks
-- Minnesota priors, CTA or equationfilter code for VAR?
+- CTA or equationfilter code for VAR?
 - consider SV ratio process?
