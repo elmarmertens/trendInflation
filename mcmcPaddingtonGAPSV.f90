@@ -48,7 +48,6 @@ PROGRAM main
   type (vsl_stream_state) :: VSLdefaultstream, VSLstream
   integer :: seed
   integer :: errcode
-  INTEGER, PARAMETER :: VSLmethodGaussian = 0, VSLmethodUniform = 0
 
   ! OPEN MP
   INTEGER :: NTHREADS, TID
@@ -762,7 +761,6 @@ SUBROUTINE thissampler(doDiffuse,T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Ns
 
   ! VSL
   INTEGER :: errcode
-  INTEGER, PARAMETER :: VSLmethodGaussian = 0, VSLmethodUniform = 0
 
   stackRegister = -1 ! dummy value for unregistered stack
   stackResetCount = -1

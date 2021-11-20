@@ -57,7 +57,6 @@ PROGRAM main
   integer :: seed
   integer :: brng
   integer :: errcode
-  INTEGER, PARAMETER :: VSLmethodGaussian = 0, VSLmethodUniform = 0
 
   ! OPEN MP
   INTEGER :: NTHREADS !, TID
@@ -799,7 +798,6 @@ SUBROUTINE particlefilter(T, Ny, y, yNaN, Nparticles, XBAR, PARTICLEweights, DRA
 
   ! VSL
   INTEGER :: errcode
-  INTEGER, PARAMETER :: VSLmethodGaussian = 0, VSLmethodUniform = 0
   type (vsl_stream_state) :: VSLstream
   double precision :: uniformdraws(T)
 
