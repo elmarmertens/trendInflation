@@ -1,8 +1,8 @@
 PROGRAM main
 
-  USE embox, only : hrulefill, savemat, savevec, storeEstimates, storeEstimatesOMP, loft, timestampstr, es30d16, int2str
+  USE embox, only : hrulefill, savemat, savevec, storeEstimates, storeEstimatesOMP, loft, timestampstr, es30d16, int2str, mean
   USE blaspack, only : eye, vech
-  USE gibbsbox, only : igammaDraw, iwishDraw, GelmanTest1, simpriormaxroot
+  USE gibbsbox, only : igammaDraw, iwishDraw, GelmanTest1, simpriormaxroot, ineffparzen, ineffbrtltt, ineffbatch
   USE vslbox
   USE timerbox
   USE omp_lib
@@ -247,6 +247,18 @@ PROGRAM main
      WRITE(*,*) 'LAUNCHING SWEEP ', j
      CALL initprogressbar(timer, 15.0d0, j)
      CALL thissampler(doDiffuse,T,p,ydata,yNaN,Ny,DRAWstates(:,:,:,j),Nstates,Nx,DRAWsvol(:,:,:,j),Nsv,Ehbar0, Vhbar0, Eh0,sqrtVh0,minSV,maxSV, DRAWhvarbar(:,:,j), hvarbarT, hvarbarDof, DRAWhgap0(:,:,j), DRAWhSigma(:,:,j), NhSigma, hSigmaT, hSigmaDof, DRAWshockslopes(:,:,j), Nshockslopes, E0shockslopes, sqrtV0shockslopes, DRAWf(:,:,j), Nf, Ef0, sqrtVf0, DRAWmaxlambda(:,:,j), Nsim,Burnin, VSLstream,timer)
+
+
+     ! compute and report INEFF factors 
+     print *, 'TID', TID, 'f', mean(ineffparzen(DRAWf(:,:,j))), mean(ineffbrtltt(DRAWf(:,:,j))), mean(ineffbatch(DRAWf(:,:,j)))
+     print *, 'TID', TID, 'hSigma', mean(ineffparzen(DRAWhSigma(:,:,j))), mean(ineffbrtltt(DRAWhSigma(:,:,j))), mean(ineffbatch(DRAWhSigma(:,:,j)))
+     print *, 'TID', TID, 'a', mean(ineffparzen(DRAWshockslopes(:,:,j))), mean(ineffbrtltt(DRAWshockslopes(:,:,j))), mean(ineffbatch(DRAWshockslopes(:,:,j))) 
+     print *, 'TID', TID, 'a', mean(ineffparzen(DRAWhvarbar(:,:,j))), mean(ineffbrtltt(DRAWhvarbar(:,:,j))), mean(ineffbatch(DRAWhvarbar(:,:,j))) 
+
+     print *, 'TID', TID, 'SV', mean(ineffparzen(reshape(DRAWsvol(:,:,:,j), (/Nsv * (T + 1), Nsim /)))), mean(ineffbrtltt(reshape(DRAWsvol(:,:,:,j), (/Nsv * (T + 1), Nsim /)))), mean(ineffbatch(reshape(DRAWsvol(:,:,:,j), (/Nsv * (T + 1), Nsim /)))) 
+     print *, 'TID', TID, 'States', mean(ineffparzen(reshape(DRAWstates(:,:,:,j), (/Nstates * (T + 1), Nsim /)))), mean(ineffbrtltt(reshape(DRAWstates(:,:,:,j), (/Nstates * (T + 1), Nsim /)))), mean(ineffbatch(reshape(DRAWstates(:,:,:,j), (/Nstates * (T + 1), Nsim /)))) 
+
+
 
      WRITE(*,*) 'STREAM', j, 'IS DONE.', ' (TID: ', TID, ')'
      errcode = vsldeletestream(VSLstream)     
