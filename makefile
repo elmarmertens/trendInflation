@@ -76,7 +76,7 @@ compile	: $(THIS)
 
 run	: $(THIS)
 	rm -f *.debug
-	time -p ./$(THIS) $(DATALABEL) $(p) $(Tdata) $(Nsim) $(burnin)
+	caffeinate -i time -p ./$(THIS) $(DATALABEL) $(p) $(Tdata) $(Nsim) $(burnin)
 
 edit : 
 	aquamacs $(THIS).f90 

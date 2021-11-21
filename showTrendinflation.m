@@ -7,7 +7,7 @@ wrap = pwd;
 
 addpath matbox
 
-datalabel = 'INFTRMSRV';
+datalabel = 'INF';
 T = 741; % needs to be adapted to the length of the actual input data
 
 % datalabel = 'HICP'; 
@@ -59,9 +59,9 @@ end
 %% get parameters
 
 if isempty(samplestamp)
-    fileext = sprintf('%s.gapSV.dat', datalabel);
+    fileext = sprintf('%s.gapSVeqfcta.dat', datalabel);
 else
-    fileext = sprintf('%s.%s.gapSV.dat', datalabel, samplestamp);
+    fileext = sprintf('%s.%s.gapSVcta.dat', datalabel, samplestamp);
 end
 if ~isempty(timestamp)
     fileext = sprintf('%s.%s', timestamp,fileext);

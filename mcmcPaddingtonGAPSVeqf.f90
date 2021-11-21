@@ -18,7 +18,7 @@ PROGRAM main
   double precision, parameter :: shockslopesSTD = 1.0d-1
 
   ! double precision :: sqrtVf0_firstlag, sqrtVf0_general
-  double precision :: lambda1Vf, lambda2Vf 
+  DOUBLE PRECISION :: minnesotaTheta1Vf, minnesotaTheta2Vf, minnesotaTheta3Vf
 
   INTEGER :: Nsim, Burnin, Nstreams
   INTEGER :: T,j,k,i,status,Ndraws
@@ -192,9 +192,17 @@ PROGRAM main
   !    k = (j-1)*(Ngap * p) + j
   !    sqrtVf0(k,k) = sqrtVf0_firstlag
   ! END DO
-  lambda1Vf = 0.5d0
-  lambda2Vf = 0.2d0
-  call minnesotaVCVsqrt(sqrtVf0, Ny, p, lambda1Vf, lambda2Vf)
+
+  minnesotaTheta1Vf = 0.1d0   ! overall shrinkage ! set to 0.05 for tightPrior
+  minnesotaTheta2Vf = 0.5d0   ! cross shrinkage
+  minnesotaTheta3Vf = 2.0d0   ! decay
+
+  call minnesotaccmVCVsqrt(sqrtVf0, Ny, p, minnesotaTheta1Vf, minnesotaTheta2Vf, minnesotaTheta3Vf)
+
+
+  ! lambda1Vf = 0.5d0
+  ! lambda2Vf = 0.2d0
+  ! call minnesotaVCVsqrt(sqrtVf0, Ny, p, lambda1Vf, lambda2Vf)
 
   ! shockslopes
   E0shockslopes = 0.0d0
@@ -540,6 +548,41 @@ PROGRAM main
   STOP
 
 CONTAINS
+
+
+  SUBROUTINE minnesotaccmVCVsqrt(sqrtVf0, N, p, theta1, theta2, theta3)
+
+    integer, intent(in) :: N, p
+    double precision, intent(inout), dimension(N*(N*p),N*(N*p)) :: sqrtVf0
+    double precision, intent(in) :: theta1, theta2, theta3
+
+    integer :: ndxVec, ndxLHS, thislag, ndxRHS
+    integer :: Nf
+
+    ! init
+    Nf = N * N * p
+    call eye(sqrtVf0) !  = 0.0d0
+
+    ! construct prior variance
+    ndxVec = 0
+    do ndxLHS = 1,N
+
+       ! lags
+       do thislag = 1,p
+          do ndxRHS = 1,N
+             ndxVec = ndxVec + 1
+             if (ndxLHS == ndxRHS) then
+                ! own lag
+                sqrtVf0(ndxVec,ndxVec) = sqrt(theta1 / (dble(thislag) ** theta3))
+             else
+                ! cross lags
+                sqrtVf0(ndxVec,ndxVec) = sqrt(theta1 * theta2 /  (dble(thislag) ** theta3))
+             end if
+          end do
+       end do
+    end do
+
+  END SUBROUTINE minnesotaccmVCVsqrt
 
   SUBROUTINE minnesotaVCVsqrt(sqrtVf0, N, p, lambda1, lambda2)
 
