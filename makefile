@@ -1,6 +1,10 @@
-THIS ?= mcmcPaddingtonGAPSV
+THIS ?= mcmcPaddingtonGAPSVeqf
 DATALABEL ?= INFTRM
 p ?= 12
+Nsim ?= 1000
+burnin ?= 1000
+Tdata ?= 0 # take full sample
+
 # THIS ?= particlefilterPaddingtonGAPSV
 
 toolboxes=statespacebox.o vslbox.o embox.o gibbsbox.o timerbox.o blaspackbox.o densitybox.o
@@ -72,7 +76,7 @@ compile	: $(THIS)
 
 run	: $(THIS)
 	rm -f *.debug
-	time -p ./$(THIS) $(DATALABEL) $(p)
+	time -p ./$(THIS) $(DATALABEL) $(p) $(Tdata) $(Nsim) $(burnin)
 
 edit : 
 	aquamacs $(THIS).f90 

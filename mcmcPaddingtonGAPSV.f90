@@ -103,15 +103,15 @@ PROGRAM main
   errcode = vslnewstream(VSLdefaultstream, vsl_brng_mt2203, seed)  
   WRITE(*,*) "... default VSLstream ", VSLdefaultstream
   T = 0
-  call getarguments(datalabel,p,T)
+  call getarguments(datalabel,p,T,Nsim,burnin)
   call getsettings(datalabel,Ny)
 
   call hrulefill
   print *, 'datalabel: ', datalabel
   if (doDiffuse) then
-     print *, 'with diffuse prior'
+     print *, 'with diffuse VAR prior'
   else
-     print *, 'with tight prior'
+     print *, 'with Minnesota VAR prior'
   end if
   call hrulefill
 
@@ -572,11 +572,12 @@ CONTAINS
   END SUBROUTINE minnesotaVCVsqrt
 
   ! -----------------------------------------------------------------
-  SUBROUTINE getarguments(datalabel,p,T)
+  SUBROUTINE getarguments(datalabel,p,T,Nsim,burnin)
 
-    INTENT(INOUT) datalabel, p, T
+    INTENT(INOUT) datalabel, p, T, Nsim, burnin
 
-    INTEGER :: T, p, counter
+    INTEGER :: T, p, Nsim, burnin
+    INTEGER :: counter
     CHARACTER (LEN=100) :: datalabel
     CHARACTER(len=32) :: arg
 
@@ -601,6 +602,18 @@ CONTAINS
     IF (command_argument_count() >= counter) THEN
        CALL get_command_argument(counter, arg)
        READ(arg, '(i20)') T
+    END IF
+
+    counter = counter + 1
+    IF (command_argument_count() >= counter) THEN
+       CALL get_command_argument(counter, arg)
+       READ(arg, '(i20)') Nsim
+    END IF
+
+    counter = counter + 1
+    IF (command_argument_count() >= counter) THEN
+       CALL get_command_argument(counter, arg)
+       READ(arg, '(i20)') burnin
     END IF
 
   END SUBROUTINE getarguments
