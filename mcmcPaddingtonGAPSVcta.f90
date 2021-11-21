@@ -124,7 +124,7 @@ PROGRAM main
 
   ! runtime parameters :end: 
 
-  filext = '.' // trim(datalabel) // '.T' // trim(int2str(T)) // '.gapSVeqf.dat'
+  filext = '.' // trim(datalabel) // '.T' // trim(int2str(T)) // '.gapSVcta.dat'
   IF (doTimeStamp) filext = '.' // timestampstr() // filext
   filext = '.' // 'notrendslopes' // filext
 
@@ -706,7 +706,7 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
 
   use embox, only : hrulefill, savemat, savevec, int2str
   use blaspack, only : eye, vech
-  use gibbsbox, only : varmaxroot, igammadraw, drawRW, drawRWcorrelated, iwishcholdraw, bayesVARXSVeqf, stochvolKSC0, SVHcholeskiKSCAR1corplus, SVHdiffusecholeskiKSCAR1, varianceDRAW, vcvcholDrawTR
+  use gibbsbox, only : varmaxroot, igammadraw, drawRW, drawRWcorrelated, iwishcholdraw, bayesVARXSVcta, stochvolKSC0, SVHcholeskiKSCAR1corplus, SVHdiffusecholeskiKSCAR1, varianceDRAW, vcvcholDrawTR
   use statespacebox, only : DLYAP, samplerA3B3C3nanscalar
   use vslbox
   use omp_lib
@@ -734,7 +734,7 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
   DOUBLE PRECISION, DIMENSION(Nshockslopes,Nsim) :: DRAWshockslopes
 
   DOUBLE PRECISION :: Ex0(Nx), sqrtVx0(Nx,Nx), A(Nx,Nx,T), Bsv(Nx,1+Ny,T), B(Nx,1+Ny), C(Ny,Nx,T), Ef0(Nf), sqrtVf0(Nf,Nf), iVf0(Nf,Nf), f(Nf), maxlambda, Iy(Ny,Ny), SigmaXstar(Nx,Nx), ygap0variance(Ny * p, Ny * p), gapshock0loadings(Ny * p, Ny)
-  double precision :: gapB(Ny,Ny)
+  double precision :: gapB(Ny,Ny), gapPAI(Ny*p,Ny)
 
   DOUBLE PRECISION :: E0shockslopes(Nshockslopes), sqrtV0shockslopes(Nshockslopes,Nshockslopes), iV0shockslopes(Nshockslopes,Nshockslopes), shockslopes(Nshockslopes)
   DOUBLE PRECISION, PARAMETER :: unity = 1.0d0 - 1.0d-6
@@ -1044,7 +1044,9 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
         ! call bayesVARSV(f, gapshock, p, gapdraw, Ngap, T, gapVCV, Ef0, iVf0, VSLstream)
 
         transposeSV = transpose(SVol(:,1:T))
-        call bayesVARXSVeqf(f, gapshocks, Ngap, T, gaplags, Ngap * p, transposeSV, gapB, Ef0, iVf0, VSLstream) 
+        gapPAI      = reshape(f, (/ Ngap * p, Ngap /))
+
+        call bayesVARXSVcta(f, gapshocks, gapPAI, Ngap, T, gaplags, Ngap * p, transposeSV, gapB, Ef0, iVf0, VSLstream) 
 
 
         if (any(isnan(f))) then
