@@ -1,9 +1,0 @@
-Ny = 6
-T  = 741
-YLABEL:
-PCE
-PCEcore
-CPI
-GDPD
-CPItrim
-CPImedian

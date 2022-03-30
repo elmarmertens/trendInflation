@@ -1,6 +1,0 @@
-Ny = 3
-T  = 296
-YLABEL:
-HICP
-Goods
-Services
