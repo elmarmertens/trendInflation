@@ -1,0 +1,5 @@
+Ny = 2
+T  = 301
+YLABEL:
+HICP
+HICPcore

@@ -11,14 +11,19 @@ clc
 %% NOTE:
 % make sure to prune SDWINFTRM from empty "-" fields in the SUPERCORE column (pre 2002)
 
+%% IMPORT ALL INPUTFILES
+SDWimport   = importdata('SDWINFTRM.csv'); % headline and core
+GDPDimport  = importdata('SDWGDPD.csv');
+SPFimport   = importdata('SDWINFSRV.csv');
+
+
 %% import SDW file
-SDWimport = importdata('SDWINFTRM.csv'); % headline and core
 sdwdates  = datenum(SDWimport.textdata(6:end,1), 'yyyymmm');
 sdwdates  = flipud(sdwdates);
 
 % colheaders = SDWimport.textdata(2,:)
 
-[y, m]      = datevec(sdwdates);
+[y, m]     = datevec(sdwdates);
 dates      = datenum(y,m,1); % FRED convention: dated at beginning of month
 dates      = dates(2:end); % since data will be differenced
 T          = length(dates);
@@ -64,7 +69,6 @@ hrulefill
 
 %% Add GDPD
 
-GDPDimport  = importdata('SDWGDPD.csv');
 sdwdates    = datenum(GDPDimport.textdata(6:end,1), 'yyyyqq');
 gdpddata    = GDPDimport.data;
 % flip order (SDW starts with youngest data)
@@ -197,7 +201,6 @@ type(filename)
 hrulefill
 
 %% add SPF
-SPFimport    = importdata('SDWINFSRV.csv');
 spfdates     = datenum(SPFimport.textdata(6:end,1), 'yyyy-mm-dd');
 spfdates     = flipud(spfdates);
 

@@ -1,0 +1,7 @@
+Ny = 4
+T  = 301
+YLABEL:
+HICP
+HICPcore
+GDPD
+SPXCORE
