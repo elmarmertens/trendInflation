@@ -749,7 +749,7 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
 
   use embox, only : hrulefill, savemat, savevec, int2str
   use blaspack, only : eye, vech
-  use gibbsbox, only : varmaxroot, igammadraw, drawRW, drawRWcorrelated, iwishcholdraw, bayesVARXSVcta, stochvolKSC0, SVHcholeskiKSCAR1corplus, SVHdiffusecholeskiKSCAR1, varianceDRAW, vcvcholDrawTR
+  use gibbsbox, only : varmaxroot, igammadraw, drawRW, drawRWcorrelated, iwishcholdraw, bayesVARXSVeqf, bayesVARXSVcta, stochvolKSC0, SVHcholeskiKSCAR1corplus, SVHdiffusecholeskiKSCAR1, varianceDRAW, vcvcholDrawTR
   use statespacebox, only : DLYAP, samplerA3B3C3nanscalar
   use vslbox
   use omp_lib
@@ -1087,9 +1087,14 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
         ! call bayesVARSV(f, gapshock, p, gapdraw, Ngap, T, gapVCV, Ef0, iVf0, VSLstream)
 
         transposeSV = transpose(SVol(:,1:T))
-        gapPAI      = reshape(f, (/ Ngap * p, Ngap /))
 
-        call bayesVARXSVcta(f, gapshocks, gapPAI, Ngap, T, gaplags, Ngap * p, transposeSV, gapB, Ef0, iVf0, VSLstream) 
+        if (j == 1) then ! init with equation filter
+           call bayesVARXSVeqf(f, gapshocks, Ngap, T, gaplags, Ngap * p, transposeSV, gapB, Ef0, iVf0, VSLstream)
+        else
+           gapPAI = reshape(f, (/ Ngap * p, Ngap /))
+           call bayesVARXSVcta(f, gapshocks, gapPAI, Ngap, T, gaplags, Ngap * p, transposeSV, gapB, Ef0, iVf0, VSLstream) 
+        end if
+        
 
 
         if (any(isnan(f))) then
