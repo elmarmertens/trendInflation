@@ -145,7 +145,7 @@ PROGRAM main
   end if
 
 
-  parameterXT   = '.notrendslopes.' // trim(parameterlabel) // '.T' // trim(int2str(T))  // '.gapSV.dat'
+  parameterXT   = '.notrendslopes.' // trim(parameterlabel) // '.T' // trim(int2str(T))  // '.gapSVeqf.dat'
 
   ALLOCATE (y(Ny,T), yNaN(Ny,T), STAT=status)
   IF (status /= 0) THEN
@@ -1166,7 +1166,7 @@ SUBROUTINE particlesmoother(T, Nsmoother, Nsv, SMOOTHERsvol, Nparticles, PARTICL
   INTEGER :: ndx(Nsmoother)
   DOUBLE PRECISION :: cdf
 
-  INTEGER, PARAMETER :: VSLmethodUniform = 0
+  ! INTEGER, PARAMETER :: VSLmethodUniform = 0 
 
   ! CHARACTER (LEN=200) :: filename
 
@@ -1271,7 +1271,7 @@ SUBROUTINE particleSmootherX(T, Ny, y, yNaN, Nsv, Nsmoother, SMOOTHERsvol, Nsmoo
   ! VSL
   TYPE (VSL_STREAM_STATE) :: VSLstream
   INTEGER :: errcode
-  INTEGER, PARAMETER :: VSLmethodGaussian = 0, VSLmethodUniform = 0
+  ! INTEGER, PARAMETER :: VSLmethodGaussian = 0, VSLmethodUniform = 0
 
   ! OMP
   INTEGER :: TID, NTHREADS

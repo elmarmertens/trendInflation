@@ -15,8 +15,8 @@ showGains    = true;
 % datalabel = 'INFTRM';
 % T = 741;
 
-datalabel = 'SDWINF';
-T = 296; % needs to be adapted to the length of the actual input data
+datalabel = 'SDWINFTRM';
+T = 301; % needs to be adapted to the length of the actual input data
 
 mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);
 
@@ -32,7 +32,7 @@ else
     filext = sprintf('%s.particles.%s.gapSV.dat', timestamp, datalabel);
 end
 
-mcmcxt = sprintf('%s.gapSV.dat', mcmclabel);
+mcmcxt = sprintf('%s.gapSVeqf.dat', mcmclabel);
 
 
 %% get data
