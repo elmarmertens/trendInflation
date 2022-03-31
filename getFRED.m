@@ -14,12 +14,12 @@ T        = length(dates);
 DATALABEL = {'INF', 'INFTRM', 'INFTRMSRV'};
 
 freddir = 'INFTRM';
-useSPF  = true;
 
 %% process datalabel
 for d = 1 : length(DATALABEL)
 
     datalabel = DATALABEL{d};
+
 
 
     switch datalabel
@@ -28,16 +28,19 @@ for d = 1 : length(DATALABEL)
             mndx1   = [1 2 3];
             mndx2   = [3 4 1];
             qndx1   = 4;
+            useSPF  = false;
         case 'INFTRM'
             Ylabel  = {'PCE', 'PCEcore', 'CPI', 'GDPD', 'PCEtrim', 'CPItrim', 'CPImedian'};
             mndx1   = [3 7 1 2 5 6];
             mndx2   = 1:6;
             qndx1   = 4;
+            useSPF  = false;
         case 'INFTRM2'
             Ylabel  = {'PCE', 'PCEcore', 'CPI', 'GDPD', 'CPItrim', 'CPImedian'};
             mndx1   = [3 7 1 5 6];
             mndx2   = [1 2 3 5 6];
             qndx1   = 4;
+            useSPF  = false;
         case 'INFTRMSRV'
             Ylabel  = {'PCE', 'PCEcore', 'CPI', 'GDPD', 'PCEtrim', 'CPItrim', 'CPImedian', ...
                 'SPFcpi10Y', 'SPFcpi1Y', 'SPFpce1Y', 'SPFgdpd1Y'}; %todo: livingston
