@@ -15,7 +15,7 @@ PROGRAM main
 
   LOGICAL, PARAMETER :: doTimestamp = .false.
 
-  double precision, parameter :: shockslopesSTD = 1.0d-1
+  double precision, parameter :: shockslopesSTD = 1.0d0
 
   ! double precision :: sqrtVf0_firstlag, sqrtVf0_general
   DOUBLE PRECISION :: minnesotaTheta1Vf, minnesotaTheta2Vf, minnesotaTheta3Vf
