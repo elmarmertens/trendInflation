@@ -1,6 +1,6 @@
 #!/bin/bash
 
-initifort
+source /opt/intel/oneapi/setvars.sh
 
 export OMP_NUM_THREADS=4
 
