@@ -121,7 +121,8 @@ hrulefill
 
 
 % reset NaN (do not forget!)
-Ydata(yNaNndx) = NaN;
+% Ydata(yNaNndx) = NaN;
+
 
 %% add SUPERCORE
 ndx         = 1;    
@@ -137,9 +138,9 @@ plot(dates, [SPXCORE SPXCORE12])
 xtickdates(dates)
 
 datalabel = 'SDWINFCORE';
-Ydata     = [Ydata, SPXCORE12];
+Ydata     = [Yinf, SPXCORE12]; % using 12m to avoid seasonals
 
-Ylabel    = cat(2, Ylabel, 'SPXCORE');
+Ylabel    = cat(2, INFlabel, 'SPXCORE');
 
 Ny             = size(Ydata, 2);
 yNaNndx        = isnan(Ydata);
@@ -164,9 +165,9 @@ hrulefill
 
 
 % reset NaN (do not forget!)
-Ydata(yNaNndx) = NaN;
+% Ydata(yNaNndx) = NaN;
 
-%% add TRIMMED
+%% add TRIMMED (but ex SUPERCORE)
 ndx      = 2 : 11;    
 trimdata = SDWimport.data(:,ndx);
 trimdata = flipud(trimdata);
@@ -186,10 +187,12 @@ for n = 1 : length(ndx)
     TRMlabel{n} = sprintf('TRM-%d', trmcut(n));
 end
 
-ndx = 3; % TRM15
+ndx      = 3; % TRM15
+TRM      = TRM(:,ndx);
+TRMlabel = TRMlabel(ndx);
 
-Ydata     = [Ydata, TRM(:,ndx)];
-Ylabel    = cat(2, Ylabel, TRMlabel(ndx));
+Ydata     = [Yinf, TRM];
+Ylabel    = cat(2, INFlabel, TRMlabel);
 Ny             = size(Ydata, 2);
 yNaNndx        = isnan(Ydata);
 Ydata(yNaNndx) = 0;
@@ -212,8 +215,32 @@ type(filename)
 hrulefill
 
 
+datalabel = 'SDWINFTRMCORE';
+
+Ydata     = [Yinf, TRM, SPXCORE12];
+Ylabel    = cat(2, INFlabel, TRMlabel, 'SPXCORE');
+Ny             = size(Ydata, 2);
+yNaNndx        = isnan(Ydata);
+Ydata(yNaNndx) = 0;
+
+mat2fortran(sprintf('%s.yData.txt', datalabel), Ydata)
+logical2fortran(sprintf('%s.yNaN.txt', datalabel), yNaNndx)
+mat2fortran(sprintf('%s.dates.txt', datalabel), dates)
+
+filename = sprintf('%s.settings.txt', datalabel);
+fid = fopen(filename, 'wt');
+fprintf(fid, 'Ny = %d\n', size(Ydata,2));
+fprintf(fid, 'T  = %d\n', size(Ydata,1));
+fprintf(fid, 'YLABEL:\n');
+for n = 1 : Ny
+    fprintf(fid, '%s\n', Ylabel{n});
+end
+fclose(fid);
+display(filename);
+type(filename)
+hrulefill
 % reset NaN (do not forget!)
-Ydata(yNaNndx) = NaN;
+% Ydata(yNaNndx) = NaN;
 
 %% add SPF
 spfdates     = datenum(SPFimport.textdata(6:end,1), 'yyyy-mm-dd');
@@ -272,8 +299,10 @@ xtickdates(dates)
 title('SPF')
 
 datalabel = 'SDWINFTRMSRV';
-Ydata     = [Ydata, Yspf];
-Ylabel    = cat(2, Ylabel, SPFlabel);
+Ydata     = [Yinf, TRM, Yspf];
+Ylabel    = cat(2, INFlabel, TRMlabel, SPFlabel);
+
+
 Ny             = size(Ydata, 2);
 yNaNndx        = isnan(Ydata);
 Ydata(yNaNndx) = 0;
