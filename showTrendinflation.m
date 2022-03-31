@@ -7,11 +7,14 @@ wrap = pwd;
 
 addpath matbox
 
-datalabel = 'INF';
-T = 741; % needs to be adapted to the length of the actual input data
 
-% datalabel = 'HICP'; 
-% T = 296; % needs to be adapted to the length of the actual input data
+% datalabel = 'INF';
+% T = 741; % needs to be adapted to the length of the actual input data
+
+datalabel = 'SDWINF'; 
+T = 301; % needs to be adapted to the length of the actual input data
+
+mcmcModel = 'eqf'; % or 'cta'
 
 samplestamp = sprintf('T%d', T);
  
@@ -36,11 +39,11 @@ Ylabel = strcat(datalabel, '-', Ylabel);
 
 filename = fullfile(datadir, sprintf('%s.yNaN.txt', datalabel));
 if exist(filename, 'file')
-    yNaN = logical(importdata(filename));
+    yNaN    = logical(importdata(filename));
     y(yNaN) = NaN;
 end
 
-ybar = nanmean(y,2);
+ybar = mean(y,2, 'omitnan');
 
 filename = sprintf('%s.label.txt', datalabel);
 
@@ -59,9 +62,9 @@ end
 %% get parameters
 
 if isempty(samplestamp)
-    fileext = sprintf('%s.gapSVeqfcta.dat', datalabel);
+    fileext = sprintf('%s.gapSV%s.dat', datalabel, mcmcModel);
 else
-    fileext = sprintf('%s.%s.gapSVcta.dat', datalabel, samplestamp);
+    fileext = sprintf('%s.%s.gapSV%s.dat', datalabel, samplestamp, mcmcModel);
 end
 if ~isempty(timestamp)
     fileext = sprintf('%s.%s', timestamp,fileext);
@@ -130,7 +133,13 @@ ndx = dates >= datenum(2000,1,1);
 newfigure
 plotCIlines(tau(ndx,ndxmean), tau(ndx,ndxtails), dates(ndx), [], [], true)
 hold on
-ylim([0 4])
+theseLims = ylim;
+if theseLims(1) > 0 
+    ylim([0 theseLims(2)])
+end
+if theseLims(2) < 4 
+    ylim([theseLims(1) 4])
+end
 xtickdates(dates(ndx))
 grid on
 wrapcf(strcat('RECENT', trendname), wrap)
