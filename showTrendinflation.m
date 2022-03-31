@@ -11,10 +11,10 @@ addpath matbox
 % datalabel = 'INF';
 % T = 741; % needs to be adapted to the length of the actual input data
 
-datalabel = 'SDWINF'; 
+datalabel = 'SDWINFTRM'; 
 T = 301; % needs to be adapted to the length of the actual input data
 
-mcmcModel = 'eqf'; % or 'cta'
+mcmcModel = 'eqf'; % 'eqf' or 'cta'
 
 samplestamp = sprintf('T%d', T);
  
