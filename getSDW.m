@@ -67,6 +67,9 @@ type(filename)
 hrulefill
 
 
+% reset NaN (do not forget!)
+Ydata(yNaNndx) = NaN;
+
 %% Add GDPD
 
 sdwdates    = datenum(GDPDimport.textdata(6:end,1), 'yyyyqq');
@@ -116,6 +119,10 @@ display(filename);
 type(filename)
 hrulefill
 
+
+% reset NaN (do not forget!)
+Ydata(yNaNndx) = NaN;
+
 %% add SUPERCORE
 ndx         = 1;    
 spxcoredata = SDWimport.data(:,ndx);
@@ -154,6 +161,10 @@ fclose(fid);
 display(filename);
 type(filename)
 hrulefill
+
+
+% reset NaN (do not forget!)
+Ydata(yNaNndx) = NaN;
 
 %% add TRIMMED
 ndx      = 2 : 11;    
@@ -199,6 +210,10 @@ fclose(fid);
 display(filename);
 type(filename)
 hrulefill
+
+
+% reset NaN (do not forget!)
+Ydata(yNaNndx) = NaN;
 
 %% add SPF
 spfdates     = datenum(SPFimport.textdata(6:end,1), 'yyyy-mm-dd');
@@ -279,6 +294,10 @@ fclose(fid);
 display(filename);
 type(filename)
 hrulefill
+
+
+% reset NaN (do not forget!)
+% Ydata(yNaNndx) = NaN;
 
 datalabel = 'SDWINFSRV';
 Ydata     = [Yinf, Yspf];
