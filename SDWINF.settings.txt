@@ -1,6 +1,0 @@
-Ny = 3
-T  = 301
-YLABEL:
-HICP
-HICPcore
-GDPD
