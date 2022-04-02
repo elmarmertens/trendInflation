@@ -151,12 +151,6 @@ PROGRAM main
   CALL readnandata(yNaN,nandatafile,Ny,T)
 
 
-  ! print *, 'START ALLOCATION'
-  ! print *, 'Ny', Ny
-  ! print *, 'T', T
-  ! print *, 'p', p
-  ! print *, 'Nf', Nf
-
   ! Model parameters and priors
   ALLOCATE (E0shockslopes(Nshockslopes), sqrtV0shockslopes(Nshockslopes,Nshockslopes), hSigmaT(Nsv-1,Nsv-1), Eh0(Nsv-1), sqrtVh0(Nsv-1,Nsv-1), minSV(Nsv), maxSV(Nsv), Ef0(Nf), sqrtVf0(Nf,Nf))
 

@@ -34,6 +34,7 @@ end
 
 mcmcxt = sprintf('%s.gapSVeqf.dat', mcmclabel);
 
+firstYear = year(dates(1)); % used to omit initial Kalman Gain
 
 %% get data
 
@@ -279,7 +280,7 @@ if showGains
     activeNdx   = any(~isnan(y),1);
     edgecolor = [1 1 1];
     for thisMonth = 1 :  12
-        ndx = find(month(dates) == thisMonth & year(dates) >= 1965);
+        ndx = find(month(dates) == thisMonth & year(dates) > firstYear);
         figure
         thisGAIN = primaryGAIN(ndx,activeNdx);
         %         if all(all(primaryGAIN(ndx,:) > 0))
