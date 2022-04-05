@@ -11,11 +11,11 @@ addpath matbox
 % datalabel = 'INF';
 % T = 741; % needs to be adapted to the length of the actual input data
 
-datalabel = 'SDWINF'; 
+datalabel = 'SDWINFTRMSRV'; 
 T = 301; % needs to be adapted to the length of the actual input data
 
-mcmcModel = 'gapSVeqf'; % 'eqf' or 'cta'
-% mcmcModel = 'gapCONST'; 
+% mcmcModel = 'gapSVeqf'; % 'eqf' or 'cta'
+mcmcModel = 'gapCONST'; 
 
 samplestamp = sprintf('T%d', T);
  
@@ -79,9 +79,7 @@ tau         = importdata(fullfile(datadir, sprintf('TAU1.%s', fileext)));
 
 sigtrend    = importdata(fullfile(datadir, sprintf('SIGTREND.%s', fileext)));
 siggap      = NaN(size(sigtrend,1), size(sigtrend,2), Ny);
-for n = 1 : Ny
-    siggap(:,:,n)  = importdata(fullfile(datadir, sprintf('SIGGAP%d.%s', n, fileext)));
-end
+
 % maxlambda   = importdata(fullfile(fortrandir, sprintf('MAXLAMBDA.%s', fileext)));
 % hvarbar     = loaddat(fullfile(fortrandir, sprintf('HVARBAR.%s', fileext)));
 % F           = loaddat(fullfile(fortrandir, sprintf('F.%s', fileext)));
@@ -112,7 +110,6 @@ end
 datalabel   = strrep(datalabel, '_', '');
 trendname   = strcat('Trend',datalabel);
 SV1name     = strcat('SVTREND',datalabel);
-SV2name     = strcat('SVGAP',datalabel);
 
 
 ndxmean     = 1;
@@ -222,27 +219,6 @@ xtickdates(dates)
 datetick('x', 'keeplimits')
 wrapcf(SV1name, wrap)
 
-%% SVgap and data
-
-for i = 1 : Ny
-    
-    firstObs = find(~yNaN(:,i),1,'first');
-    newfigure
-    subplot(2,1,1)
-    plotCIlines(STATES(:,ndxmean,Ny + i), STATES(:,ndxtails,Ny + i), dates)
-    hold on
-    shades(dates, 1 : T < firstObs)
-    xtickdates(dates)
-    grid on
-    
-    subplot(2,1,2)
-    plotCIlines(siggap(:,ndxmean,i), siggap(:,ndxtails,i), dates)
-    hold on
-    xtickdates(dates)
-    shades(dates, 1 : T < firstObs)
-    datetick('x', 'keeplimits')
-    wrapcf(sprintf('GAP%s', Ylabel{i}), wrap)
-end
 
 %% report little table
 coreNdx = 1;
