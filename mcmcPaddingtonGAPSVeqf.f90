@@ -770,7 +770,7 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
   DOUBLE PRECISION, DIMENSION(1,Nsim) :: DRAWmaxlambda, DRAWhvarbar
   DOUBLE PRECISION, DIMENSION(Nshockslopes,Nsim) :: DRAWshockslopes
 
-  DOUBLE PRECISION :: Ex0(Nx), sqrtVx0(Nx,Nx), A(Nx,Nx,T), Bsv(Nx,1+Ny,T), B(Nx,1+Ny), C(Ny,Nx,T), Ef0(Nf), sqrtVf0(Nf,Nf), iVf0(Nf,Nf), f(Nf), maxlambda, Iy(Ny,Ny), SigmaXstar(Nx,Nx), ygap0variance(Ny * p, Ny * p), gapshock0loadings(Ny * p, Ny)
+  DOUBLE PRECISION :: Ex0(Nx), sqrtVx0(Nx,Nx), A(Nx,Nx,T), Bsv(Nx,1+Ny,T), B(Nx,1+Ny), C(Ny,Nx,T), Ef0(Nf), sqrtVf0(Nf,Nf), iVf0(Nf,Nf), f(Nf), maxlambda, Iy(Ny,Ny), SigmaXstar(Nx,Nx) ! , ygap0variance(Ny * p, Ny * p), gapshock0loadings(Ny * p, Ny)
   double precision :: gapB(Ny,Ny)
 
   DOUBLE PRECISION :: E0shockslopes(Nshockslopes), sqrtV0shockslopes(Nshockslopes,Nshockslopes), iV0shockslopes(Nshockslopes,Nshockslopes), shockslopes(Nshockslopes)
@@ -865,7 +865,7 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
 
   ! prepare prior VCV of states
   Ex0          = 0.0d0
-  Ex0(1:Ny)    = 2.0d0
+  Ex0(1:Nbar)  = 2.0d0
   ! - expressed as lower  triangular-choleski factor (sqrtVx0 * sqrtVx0')
   sqrtVx0 = 0.0d0
   sqrtVx0(1:Nbar,1) = 100.d0                 ! uncertainty about "primary" trend
@@ -1003,23 +1003,23 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0, 
      FORALL (k=1:T,i=1:Nsv) Bsv(:,i,k) = B(:,i) * SVol(i,k)
 
      ! update prior Variance for initial states 
-     FORALL (i=1:Ngap) gapshock0loadings(:,i) = B(ndxGapCompanionStart:ndxGapCompanionStop,1+i) * SVol(1+i,0)
-     CALL DLYAP(ygap0variance, A(ndxGapCompanionStart:ndxGapCompanionStop,ndxGapCompanionStart:ndxGapCompanionStop,1), gapshock0loadings, Ngap * p, Ngap, errcode) 
-     if (errcode /= 0) then
-        write (*,*) 'DLYAP error (ygap0variance)', errcode
-        stop 1
-     end if
+     ! FORALL (i=1:Ngap) gapshock0loadings(:,i) = B(ndxGapCompanionStart:ndxGapCompanionStop,1+i) * SVol(1+i,0)
+     ! CALL DLYAP(ygap0variance, A(ndxGapCompanionStart:ndxGapCompanionStop,ndxGapCompanionStart:ndxGapCompanionStop,1), gapshock0loadings, Ngap * p, Ngap, errcode) 
+     ! if (errcode /= 0) then
+     !    write (*,*) 'DLYAP error (ygap0variance)', errcode
+     !    stop 1
+     ! end if
 
-     ! Factorize the unconditional variance
-     CALL DPOTRF('L', Ngap * p, ygap0variance, Ngap * p, errcode)
-     if (errcode /= 0) then
-        write (*,*) 'DPOTRF error (ygap0variance)', errcode
-        stop 1
-     end if
-     ! zero out the upper triangular
-     FORALL (i=2:Ngap*p) ygap0variance(1:i-1,i) = 0.0d0
-     ! fill it in
-     sqrtVx0(ndxGapCompanionStart:ndxGapCompanionStop,ndxGapCompanionStart:ndxGapCompanionStop) = ygap0variance
+     ! ! Factorize the unconditional variance
+     ! CALL DPOTRF('L', Ngap * p, ygap0variance, Ngap * p, errcode)
+     ! if (errcode /= 0) then
+     !    write (*,*) 'DPOTRF error (ygap0variance)', errcode
+     !    stop 1
+     ! end if
+     ! ! zero out the upper triangular
+     ! FORALL (i=2:Ngap*p) ygap0variance(1:i-1,i) = 0.0d0
+     ! ! fill it in
+     ! sqrtVx0(ndxGapCompanionStart:ndxGapCompanionStop,ndxGapCompanionStart:ndxGapCompanionStop) = ygap0variance
 
 
      ! call smoothing sampler

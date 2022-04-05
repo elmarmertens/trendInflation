@@ -709,7 +709,7 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0,V
 
   DOUBLE PRECISION, PARAMETER :: unity = 1.0d0 - 1.0d-4
 
-  DOUBLE PRECISION :: gapdraw(-(p-1):T,Ngap), gapshock(1:T,Ngap), gap0variance(Ngap*p,Ngap*p)
+  DOUBLE PRECISION :: gapdraw(-(p-1):T,Ngap), gapshock(1:T,Ngap) ! , gap0variance(Ngap*p,Ngap*p)
 
   DOUBLE PRECISION, DIMENSION(Nsv) :: minSV, maxSV
   DOUBLE PRECISION :: Ehbar0,Vhbar0,hvarbarT, hvarbar
@@ -748,14 +748,6 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0,V
   call eye(Iy)
 
   ! prepare state space
-  Ex0 = 0.0d0
-  Ex0(1:Nbar) = 2.0d0
-  ! call eye(sqrtVx0, 1.0d2)
-  ! sqrtVx0, expressed as lower  triangular-choleski factor (sqrtVx0 * sqrtVx0')
-  sqrtVx0 = 0.0d0
-  sqrtVx0(1:Nbar,1) = 100.d0                 ! uncertainty about "primary" trend
-  FORALL (j=2:Nbar) sqrtVx0(j,j) = 2.0d0     ! uncertainty about other trend given primary
-
   A = 0.0d0
   ! unit roots for bar
   FORALL (j=1:Nbar) A(j,j,:) = 1.0d0
@@ -791,6 +783,14 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0,V
   end if
 
 
+  ! prepare prior VCV of states
+  Ex0 = 0.0d0
+  Ex0(1:Nbar) = 2.0d0
+  ! call eye(sqrtVx0, 1.0d2)
+  ! sqrtVx0, expressed as lower  triangular-choleski factor (sqrtVx0 * sqrtVx0')
+  sqrtVx0 = 0.0d0
+  sqrtVx0(1:Nbar,1) = 100.d0                 ! uncertainty about "primary" trend
+  FORALL (j=2:Nbar) sqrtVx0(j,j) = 2.0d0     ! uncertainty about other trend given primary
   shakes = 1
   j = 1
   lastInStack = 1 ! redundant, but avoids compiler warning
@@ -891,27 +891,27 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0,V
      ! Fill in VAR coefficients
      FORALL (i=1:T) A(Nbar+1:Nbar+Ngap,Nbar+1:Nbar+Ngap*p,i) = transpose(reshape(f, (/ Ngap * p, Ngap /)))
 
-     ! Fill in unconditional variance of stationary states
-     CALL DLYAP(gap0variance, A(Nbar+1:Nx,Nbar+1:Nx,1), B(Nbar+1:Nx,:,1), Ngap * p, Nw, errcode) 
-     if (errcode /= 0) then
-        write (*,*) 'DLYAP error (gap0variance)', errcode
-        call savemat(B(Nbar+1:Nx,:,1), 'B.debug')
-        call savemat(A(Nbar+1:Nx,Nbar+1:Nx,1), 'A.debug')
-        stop 1
-     end if
-     ! Factorize the unconditional variance
-     CALL DPOTRF('U', Ngap * p, gap0variance, Ngap * p, errcode)
-     if (errcode /= 0) then
-        write (*,*) 'DPOTRF error (ygapvariance)', errcode
-        call savemat(B(Nbar+1:Nx,:,1), 'B.debug')
-        call savemat(A(Nbar+1:Nx,Nbar+1:Nx,1), 'A.debug')
-        stop 1
-     end if
+     ! ! Fill in unconditional variance of stationary states
+     ! CALL DLYAP(gap0variance, A(Nbar+1:Nx,Nbar+1:Nx,1), B(Nbar+1:Nx,:,1), Ngap * p, Nw, errcode) 
+     ! if (errcode /= 0) then
+     !    write (*,*) 'DLYAP error (gap0variance)', errcode
+     !    call savemat(B(Nbar+1:Nx,:,1), 'B.debug')
+     !    call savemat(A(Nbar+1:Nx,Nbar+1:Nx,1), 'A.debug')
+     !    stop 1
+     ! end if
+     ! ! Factorize the unconditional variance
+     ! CALL DPOTRF('U', Ngap * p, gap0variance, Ngap * p, errcode)
+     ! if (errcode /= 0) then
+     !    write (*,*) 'DPOTRF error (ygapvariance)', errcode
+     !    call savemat(B(Nbar+1:Nx,:,1), 'B.debug')
+     !    call savemat(A(Nbar+1:Nx,Nbar+1:Nx,1), 'A.debug')
+     !    stop 1
+     ! end if
 
-     ! zero out the lower triangular
-     FORALL (i=2:Ngap * p) gap0variance(i,1:i-1) = 0.0d0
-     ! fill it in
-     sqrtVx0(Nbar+1:Nx,Nbar+1:Nx) = transpose(gap0variance)
+     ! ! zero out the lower triangular
+     ! FORALL (i=2:Ngap * p) gap0variance(i,1:i-1) = 0.0d0
+     ! ! fill it in
+     ! sqrtVx0(Nbar+1:Nx,Nbar+1:Nx) = transpose(gap0variance)
 
 
      ! call savemat(A(:,:,1), 'A.debug')
