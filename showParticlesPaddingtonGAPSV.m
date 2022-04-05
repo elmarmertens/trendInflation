@@ -15,7 +15,7 @@ showGains    = true;
 % datalabel = 'INFTRM';
 % T = 741;
 
-datalabel = 'SDWINFTRM';
+datalabel = 'SDWINF';
 T = 301; % needs to be adapted to the length of the actual input data
 
 mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);

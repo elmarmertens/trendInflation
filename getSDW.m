@@ -73,6 +73,10 @@ Ydata(yNaNndx) = NaN;
 %% Add GDPD
 
 sdwdates    = datenum(GDPDimport.textdata(6:end,1), 'yyyyqq');
+% date last month in quarter
+[sdwY, sdwM, sdwD] = datevec(sdwdates);
+sdwdates = datenum(sdwY, sdwM + 2, sdwD);
+
 gdpddata    = GDPDimport.data;
 % flip order (SDW starts with youngest data)
 sdwdates = flipud(sdwdates);
