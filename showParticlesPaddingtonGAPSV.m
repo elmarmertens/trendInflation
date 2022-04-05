@@ -15,13 +15,15 @@ showGains    = true;
 % datalabel = 'INFTRM';
 % T = 741;
 
-datalabel = 'SDWINF';
-T = 301; % needs to be adapted to the length of the actual input data
+datalabel = 'SDWINFTRM';
+T = 302; % needs to be adapted to the length of the actual input data
 
 mcmclabel = sprintf('notrendslopes.%s.T%d', datalabel, T);
 
 timestamp = [];
 primaryNdx  = 1;
+
+firstYear = 1999; 
 
 datadir   = pwd;
 
@@ -34,7 +36,9 @@ end
 
 mcmcxt = sprintf('%s.gapSVeqf.dat', mcmclabel);
 
-firstYear = year(dates(1)); % used to omit initial Kalman Gain
+if isempty(firstYear)
+    firstYear = year(dates(1)); % used to omit initial Kalman Gain
+end
 
 %% get data
 

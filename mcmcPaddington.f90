@@ -786,9 +786,8 @@ SUBROUTINE thissampler(T,p,y,yNaN,Ny,DRAWstates,Nstates,Nx,DRAWsvol,Nsv,Ehbar0,V
   ! prepare prior VCV of states
   Ex0 = 0.0d0
   Ex0(1:Nbar) = 2.0d0
-  ! call eye(sqrtVx0, 1.0d2)
   ! sqrtVx0, expressed as lower  triangular-choleski factor (sqrtVx0 * sqrtVx0')
-  sqrtVx0 = 0.0d0
+  call eye(sqrtVx0, 5.0d0)
   sqrtVx0(1:Nbar,1) = 100.d0                 ! uncertainty about "primary" trend
   FORALL (j=2:Nbar) sqrtVx0(j,j) = 2.0d0     ! uncertainty about other trend given primary
   shakes = 1

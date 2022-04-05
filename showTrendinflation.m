@@ -11,8 +11,8 @@ addpath matbox
 % datalabel = 'INF';
 % T = 741; % needs to be adapted to the length of the actual input data
 
-datalabel = 'SDWINF'; 
-T = 301; % needs to be adapted to the length of the actual input data
+datalabel = 'SDWINFTRM'; 
+T = 302; % needs to be adapted to the length of the actual input data
 
 mcmcModel = 'gapSVeqf'; % 'eqf' or 'cta'
 % mcmcModel = 'gapCONST'; 
