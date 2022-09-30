@@ -1,0 +1,3 @@
+[submodule "fortranbox"]
+	path = fortranbox
+	url = https://github.com/elmarmertens/em-fortranbox
