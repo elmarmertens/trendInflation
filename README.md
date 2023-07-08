@@ -1,4 +1,4 @@
-# trendInflation
+# Code to estimate Trend Inflation
 
 code for trend inflation model of Mertens (2016, REStat, http://dx.doi.org/10.1162/REST_a_00549) and Garnier, Mertens and Nelson (2015, IJCB, http://www.ijcb.org/journal/ijcb15q4a2.htm).
 
