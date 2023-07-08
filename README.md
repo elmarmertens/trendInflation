@@ -8,7 +8,6 @@ The `master` branch works with US as well as EuroAre data. US data provided by F
 
 Complete replication files for the paper are here: http://dx.doi.org/10.7910/DVN/MUF2HC
 
-## TODO
-- add SV(O)-(t) shocks
-- CTA or equationfilter code for VAR?
-- consider SV ratio process?
+## NEW: Matlab implementation
+
+For an implementation in Matlab, please see https://github.com/elmarmertens/ABCprecisionsampler
